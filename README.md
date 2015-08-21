@@ -1,5 +1,5 @@
 # quickmerge
-This package contains all necessary components to run the merger program created by Mahul Chakraborty.
+This package contains all necessary components to run the assembly merger program quickmerge.
 
 ######################
 
