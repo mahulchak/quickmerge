@@ -1,5 +1,5 @@
 # quickmerge
-This package contains all necessary components to run the assembly merger program quickmerge.
+This package contains all necessary components to run the assembly merger program quickmerge. Please send questions and comments to mchakrab@uci.edu
 
 ######################
 
