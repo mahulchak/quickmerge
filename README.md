@@ -8,7 +8,8 @@ INSTALL:
 UNIX:
 
 to install on a unix-based system, enter the following into the command line from the directory that this readme originated from:
-bash make_merger.sh
+
+	bash make_merger.sh
 
 This will compile 'quickmerge' and 'MUMmer', its primary dependency.
 
