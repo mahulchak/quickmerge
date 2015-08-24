@@ -1,3 +1,6 @@
+//This is part of quickmerge, a simple program to merge different assemblies created using long molecules. 
+//Copyright (C) 2015 Mahul Chakraborty
+//See README for more details
 
 #ifndef MASM_H_
 #define MASM_H_
