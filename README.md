@@ -22,7 +22,8 @@ first, enter the 'merger' directory and enter the following command to make the 
 	make
 
 then, enter the 'MUMmer3.23' directory and enter the following commands, as specified in the MUMmer readme:
-make check
+
+	make check
 
 	make install
 
