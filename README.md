@@ -1,5 +1,7 @@
 # quickmerge
+
 This package contains all necessary components to run the assembly merger program quickmerge. Please send questions and comments to mchakrab@uci.edu
+The source code is provided here. However, if you want only the program and don't want to compile yourself, let us know and we will be happy to send you the executable.
 
 ######################
 
@@ -11,7 +13,7 @@ to install on a unix-based system, enter the following into the command line fro
 
 	bash make_merger.sh
 
-This will compile 'quickmerge' and 'MUMmer', its primary dependency.
+This will compile 'quickmerge' and 'MUMmer', its primary dependency. Also requires GNU c++ compiler.
 
 NON-UNIX:
 
@@ -53,4 +55,5 @@ Finally, use 'quickmerge' to merge the two assemblies (note: the order of the se
 
 	quickmerge -d out.rq.delta -q hybrid_assembly.fasta -r self_assembly.fasta -hco 5 -c 1.5
 
-
+####################
+If you find this program useful, please cite our paper.
