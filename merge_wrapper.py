@@ -12,6 +12,7 @@ parser.add_argument("self_assembly_fasta",help="the output of a self assembly pr
 parser.add_argument("-pre","--prefix", help="the prefix for all output files")
 parser.add_argument("-hco","--hco", help="the quickmerge hco parameter")
 parser.add_argument("-c","--c", help="the quickmerge c parameter")
+parser.add_argument("-l","--length_cutoff", help="minimum contig length to be merged")
 parser.add_argument("--no_nucmer", help="skip the nucmer step",action="store_true")
 parser.add_argument("--no_delta", help="skip the nucmer and delta-filter steps",action="store_true")
 parser.add_argument("--stop_after_nucmer", help="do not perform the delta-filter and merger steps",action="store_true")
@@ -28,6 +29,8 @@ if args.hco:
   hco = args.hco
 if args.c:
   c = args.c
+if args.length_cutoff:
+  length_cutoff = args.length_cutoff
 
 #run nucmer:
 if not args.no_nucmer and not args.no_delta:
@@ -46,6 +49,9 @@ if args.hco:
 if args.c:
   mergercall.append('-c')
   mergercall.append(str(c))
+if args.length_cutoff:
+  mergercall.append('-l')
+  mergercall.append(str(length_cutoff))
 
 #run the merging program
 if not args.stop_after_nucmer and not args.stop_after_df:
