@@ -1,11 +1,7 @@
-//This is part of quickmerge, a simple program to merge different assemblies created using long molecules. 
-//Copyright (C) 2015 Mahul Chakraborty
-//See README for more details
 
 #ifndef MASM_H_
 #define MASM_H_
 
-#include<iostream>
 #include<vector>
 #include<string>
 #include<map>
@@ -41,6 +37,7 @@ map<string,vector<string> > lseq;
 map<string,vector<string> > rseq;
 map<string,vector<int> > Ori;
 map<string,bool> qToRemove; 
+map<string,bool> strandInfo;
 };
 
 class fastaSeq{
@@ -60,14 +57,14 @@ void nOvlStoreCalculator(asmMerge & merge);
 void writeSummary(asmMerge & merge);
 string revCom(string & str);
 void ovrHngCal(asmMerge & merge);
-void fillAnchor(asmMerge & merge, asmMerge & merge1, double propAnchor, double propCutoff);
+void fillAnchor(asmMerge & merge, asmMerge & merge1, double propAnchor, double propCutoff,const int & length);
 void fillSeq(fastaSeq & fasta, ifstream& fin, char c);
 void fillSeq(fastaSeq & fasta, ifstream& fin);
 void writeAnchorSummary(asmMerge & merge);
 void findChain(asmMerge & merge, asmMerge & merge1);
 vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname);
-string longestLeft(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ);
-string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ);
+string longestLeft(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ, string & prevElem);
+string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ, string & prevElem);
 void createMseq(asmMerge & merge, asmMerge & merge1);
 void fillOri(asmMerge & merge, asmMerge & merge1);
 void fillToRemove(asmMerge & merge, vector<string> & myvector);
@@ -84,4 +81,5 @@ vector<int> minD(int & qf1,int & qe1, int & qf2, int & qe2);
 vector<int> maxD(int & qf1,int & qe1, int & qf2, int & qe2);
 string reversed(string & str);
 int returnIndex (vector<string> & myvector, string & str);
+void assignStrand(asmMerge & merge);
 #endif

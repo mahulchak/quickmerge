@@ -14,7 +14,7 @@ using namespace std;
 int main(int argc, char * argv[])
 {
         if(argc==1)
-        {cerr<<"Usage: "<<argv[0]<<" -d delta_file.out -q hybrid.fasta -r self.fasta -hco (default=5.0) -c (default=1.5)"<<endl;
+        {cerr<<"Usage: "<<argv[0]<<" -d delta_file.out -q hybrid.fasta -r self.fasta -hco (default=5.0) -c (default=1.5) -l length_cutoff "<<endl;
         exit(EXIT_FAILURE);
         }
 
@@ -34,6 +34,7 @@ int main(int argc, char * argv[])
 	int qu_end = 0;
 	int r_st = 0;
 	int r_end = 0;
+	const int length = atoi(argv[12]);
 
 	if(*argv[8])
 	{
@@ -94,7 +95,7 @@ int main(int argc, char * argv[])
 	}
 	fillSeq(hybrid,hyb,' ');
 	fillSeq(pbOnly,pb);
-	fillAnchor(merge,merge1,hco,cutoff);
+	fillAnchor(merge,merge1,hco,cutoff,length);
 	writeAnchorSummary(merge);
 
 
