@@ -55,7 +55,9 @@ Finally, use 'quickmerge' to merge the two assemblies (note: the order of the se
 	quickmerge -d out.rq.delta -q hybrid_assembly.fasta -r self_assembly.fasta -hco 5 -c 1.5 -l n
 
 -hco: controls the overlap cutoff for anchor contigs. Bigger the number, more stringent the criteria, fewer overlaps are selected.
+
 -c: controls the overlap cutoff for contigs used for extension of the anchor contig.
+
 For both "hco" and "c", bigger the number, more stringent is the criteria for contig selection (which will lead to fewer contig merging). If they are too small (<1), spurious overlaps will be used for contig merging.
 
 -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the self_assembly.fasta. E.g. if the N50 of your self_assembly.fasta is 2Mb. Then use 2000000 as your cutoff. Lowering this value will lead to more merging but may increase the probability of mis-joins. 
