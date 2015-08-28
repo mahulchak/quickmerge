@@ -1,7 +1,6 @@
 # quickmerge
 
 This package contains all necessary components to run the assembly merger program quickmerge. Please send questions and comments to mchakrab@uci.edu
-The source code is provided here. However, if you want only the program and don't want to compile yourself, let us know and we will be happy to send you the executable.
 
 ######################
 
