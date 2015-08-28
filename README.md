@@ -64,7 +64,7 @@ For both "hco" and "c", bigger the number, more stringent is the criteria for co
 
 -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the 'self_assembly.fasta'. E.g. if the N50 of your self_assembly.fasta is 2Mb. Then use 2000000 as your cutoff. Lowering this value will lead to more merging but may increase the probability of mis-joins. 
 
-Although this program was written to merge a hybrid assembly and a PB-only assembly, it can also be used to two different PB-only assemblies (e.g. one generated with FALCON and another generated with [PBcR]:https://github.com/PacificBiosciences/FALCON-integrate).
+Although this program was written to merge a hybrid assembly and a PB-only assembly, it can also be used to two different PB-only assemblies (e.g. one generated with FALCON and another generated with <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a>).
 
 Assembly polishing with Quiver before or/and after assembly merging is recommended.
 ####################
