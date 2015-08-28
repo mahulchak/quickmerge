@@ -742,7 +742,7 @@ if(rQseq == " Backbone_106/0_543204"){cout<<"reference I found is "<<trRseq<<end
 				}
 				refForSideR = rRseq;
 				rRseq = "";
-				trQseq == ""; //reset trQseq
+				trQseq = ""; //reset trQseq
 			}
 		}
 	}
