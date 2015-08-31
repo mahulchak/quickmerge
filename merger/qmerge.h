@@ -61,7 +61,7 @@ void fillAnchor(asmMerge & merge, asmMerge & merge1, double propAnchor, double p
 void fillSeq(fastaSeq & fasta, ifstream& fin, char c);
 void fillSeq(fastaSeq & fasta, ifstream& fin);
 void writeAnchorSummary(asmMerge & merge);
-void findChain(asmMerge & merge, asmMerge & merge1);
+void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged);
 vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname);
 string longestLeft(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ, string & prevElem);
 string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ, string & prevElem);

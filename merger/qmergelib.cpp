@@ -466,13 +466,10 @@ vector<string> v1;
         {
                	if(temp_rname[i] == tempname)
         	{
-//if(tempname == "ctg7180000003089"){cout<<"matches are "<<temp_qname[i]<<endl;} 
-if(temp_qname[i] == " Backbone_7/0_4372293"){cout<<"the ref is "<<temp_rname[i]<<endl;}
                 	 v1.push_back(temp_qname[i]);//may be add the condition that only overlaps above a certain point makes it into the list
 			temp_qname[i]="";
 			temp_rname[i] = ""; //akin to erasing the element. actual erasing is more time consuming.
-			
-                }
+		}
         i++;
 	}
         return v1;
@@ -486,17 +483,14 @@ longest =0;
 size = 0;
 	for(unsigned int i=0;i<seq.size();i++)
 	{
-//cout<<tempname<<"\t";
 		if(RorQ == 'Q')
 		{
 			str = tempname+seq[i];
-//if(seq[i] == " Backbone_7/0_4372293"){cout<<"the ref is "<<tempname<<endl;}
 		}
 		if(RorQ == 'R')
 		{
 			str = seq[i]+tempname;
 		}
-//cout<<str<<"\t"<<merge.ovrHangQ[str]<<"\t";
 		if(RorQ == 'Q') //if looking for query overhang length 
 		{
 			if (merge.ovrHangQ[str] == -1) //if ref is innie			
@@ -513,10 +507,7 @@ size = 0;
 			if(merge.ovrHangR[str] == -1) // if query is innie
 			{
 				size = merge.ovrHangQR[str][0];
-//if(tempname == " Backbone_50/0_4397080"){cout<<"reference length is "<<size<<" aln name is "<<str<<endl;}
 			}
-			//if((merge.sideInfo[str] == 'L') && (merge.ovrHangR[str] != -1))
-			//if((merge.sideInfo[str] == 'R') && (merge.ovrHangR[str] != -1))
 			if((merge.strandInfo[str] == merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1)) //if the references for the query are on the same strand
 			{
 				if(merge.sideInfo[str] != merge.sideInfo[prevElem]) // they ought to be different
@@ -538,8 +529,6 @@ size = 0;
 			longest = size;
 			lStr = seq[i];
 		}
-//cout<<seq[i]<<"\t"<<size;
-//cout<<endl;
 	}
 return lStr;
 }
@@ -555,7 +544,6 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 		if(RorQ == 'Q')
 		{
 			str = tempname+seq[i];
-//if(seq[i] == " Backbone_7/0_4372293"){cout<<"the ref is "<<tempname<<endl;}
 		}
 		if(RorQ == 'R')
 		{
@@ -589,8 +577,6 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 				{
 					size = merge.ovrHangQR[str][0];//if the previous was left, and this is right, take right overhang
 				} 
-//if(str == "ctg7180000002491 Backbone_106/0_543204"){cout<<"size is "<<size<<" but left overhang is "<<merge.ovrHangQR[str][0]<<endl;}
-if(str == "ctg7180000002491 Backbone_106/0_543204"){cout<<"prev ref is "<<prevElem<<" and its side "<<merge.strandInfo[prevElem]<<endl;}
 			}
 			
 			if((merge.strandInfo[str] == merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1)) //if the references for the query are on the same strand
@@ -613,12 +599,11 @@ if(str == "ctg7180000002491 Backbone_106/0_543204"){cout<<"prev ref is "<<prevEl
 			longest = size;
 			lStr = seq[i];
 		}
-//if(seq[i] == " Backbone_7/0_4372293"){cout<<"the ref is "<<tempname<<" and size is "<<longest<<endl;}
 	}
 return lStr;
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void findChain(asmMerge & merge, asmMerge & merge1)
+void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged)
 {
 	vector<string> temp_rname;
 	vector<string> temp_qname;
@@ -628,6 +613,8 @@ void findChain(asmMerge & merge, asmMerge & merge1)
 
 
 	vector<string> seqs;
+	vector<string> refSeqToAdd;
+	vector<string> refSeqToRemove;
 	string tempname,lRseq,lQseq,rRseq,rQseq,tlRseq,trRseq,tlQseq,trQseq;
 	string ref,refForSideL,refForSideR,prevElem;
 	for(map<string,vector<string> >::iterator it= merge.cAnchor.begin();it!=merge.cAnchor.end();it++)
@@ -647,10 +634,14 @@ void findChain(asmMerge & merge, asmMerge & merge1)
 		ref = tempname;
 		seqs = vfind(tempname,temp_rname,temp_qname);
 		fillToRemove(merge,seqs);
-
+		
 		lQseq = longestLeft(tempname,seqs,merge,'Q','N',prevElem);
 		rQseq = longestRt(tempname,seqs,merge,'Q','N',prevElem);
-
+		if((lQseq == "") && (rQseq == "")) //for those which are innie
+		{
+		refSeqToAdd.push_back(tempname);
+		cout<<tempname<<endl;
+		}
 		while((rQseq != "")|(rRseq != "")|(lQseq != "")|(lRseq != ""))	
 		{
 	 
@@ -673,8 +664,8 @@ void findChain(asmMerge & merge, asmMerge & merge1)
 						prevElem = "";
 					}
 					lRseq = tlRseq;
+					refSeqToRemove.push_back(lRseq);
 				}
-				//ref = "";//reset ref after tempname is used
 				tlQseq = lQseq; //store the info to get info about the alignment NEW
 				lQseq = ""; //reset lQseq
 			}
@@ -718,7 +709,7 @@ void findChain(asmMerge & merge, asmMerge & merge1)
 						prevElem = "";
 					}
 					rRseq = trRseq;
-if(rQseq == " Backbone_106/0_543204"){cout<<"reference I found is "<<trRseq<<endl;}
+					refSeqToRemove.push_back(rRseq);
 				}
 				ref = "";
 				trQseq = rQseq;
@@ -744,6 +735,14 @@ if(rQseq == " Backbone_106/0_543204"){cout<<"reference I found is "<<trRseq<<end
 				rRseq = "";
 				trQseq = ""; //reset trQseq
 			}
+		}
+	}
+	for(unsigned int i =0 ;i<refSeqToAdd.size();i++)
+	{
+		if(find(refSeqToRemove.begin(),refSeqToRemove.end(),refSeqToAdd[i]) == refSeqToRemove.end())
+		{
+		merged.seq[refSeqToAdd[i]] = pbOnly.seq[refSeqToAdd[i]];
+		cout<<refSeqToAdd[i]<<endl;
 		}
 	}
 }
@@ -940,16 +939,14 @@ void writeMerged(fastaSeq & merged, ofstream & fout)
 void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & pbOnly, fastaSeq & merged)
 {
 	string name,subseq,subseqR,indexL1,indexL2,seqHolder;
-	//,prevElem,prevAln;
 	vector<int> v1;
 	int q1_f,q1_last,q2_f,q2_last,r1_f,r1_last,r2_f,r2_last,tempRef_st,cheatF,cheatR;
 	int begin_insrt = 1;
-	//bool beginQ = 0; //stores the info of whether the first element is a query
 	for(map<string,vector<string> >::iterator it = merge1.lseq.begin(); it!=merge1.lseq.end();it++) // merge1.lseq is container for the contig names
 	{
 		name = it->first;
 		begin_insrt = 1;
-		//beginQ = 0;
+		
 		for(unsigned int i=0;i<merge1.lseq[name].size();i++)
 		{
 			q1_f = 0;			
@@ -965,7 +962,6 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 				indexL2 = merge1.rseq[name][i]; // index name coresponding to the query element
 				q2_f = merge.q_st[indexL2][0];
 				q2_last = merge.q_end[indexL2][merge.q_end[indexL2].size()-1];	
-				//beginQ = 1;
 				if(q2_f > merge.q_end[indexL2][0]) // if query is reverse oriented
 				{
 					subseq = hybrid.seq[merge1.lseq[name][i]].substr(q2_f); //take q_f to the end of the sequence
@@ -998,10 +994,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 				}
 				if(merge1.lseq[name][i] != name)
 				{
-					//vector<string>::iterator itV = find(merge1.lseq[name].begin(),merge1.lseq[name].end(),name); //get the position of name
-					//prevElem = *(--itV); //get the 
-					//prevAln = name + prevElem;
-					//if((merge.Ori[name][i] != merge.Ori[name][i+1]) && (merge.sideInfoQ[merge1.rseq[name][i]] == 'R'))//if the second query is -1 but overlaps at the R side 
+				
 					if((merge.Ori[name][i] == 1) && (merge.Ori[name][i+1] == -1) && (merge.sideInfoQ[merge1.rseq[name][i]]=='R'))
 					{
 						subseq = pbOnly.seq[merge1.lseq[name][i]].substr(0,r2_last);
@@ -1094,7 +1087,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					indexL2 = merge1.rseq[name][i];
 					r2_f = merge.ref_st[indexL2][0];				
 					r2_last = merge.ref_end[indexL2][merge.ref_end[indexL2].size()-1];
-					//v1 = maxD(r1_f,r1_last,r2_f,r2_last); // maximum distance between coords from the two alignments
+					
 					if(tempRef_st != 0)
 					{
 						r1_last = tempRef_st; //transfer the number so that it is used in case of an overlap;
@@ -1103,10 +1096,8 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					v1 = maxD(r1_f,r1_last,r2_f,r2_last); // maximum distance between coords from the two alignments
 					r1_f = min(v1[0],v1[1]);
 					r2_last = max(v1[0],v1[1]);
-
 					subseq = pbOnly.seq[merge1.lseq[name][i]].substr(r1_f,(r2_last - r1_f)); 
 					tempRef_st = 0; //reset tempRef_st
-					//if((merge.Ori[name][i] == -1) && (name == merge1.lseq[name][i]) && (beginQ == 1))
 					if((i<2)&&(merge.Ori[name][i] == -1) && (name == merge1.lseq[name][i]))
 					{
 						begin_insrt = -1;
@@ -1133,14 +1124,9 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 				{
 					subseqR = revCom(subseq);
 					subseq = subseqR;
-					//begin_insrt = begin_insrt * merge.Ori[name][i];
 				}
 			}
-		
-//if(name == "ctg7180000001811"){
-//cout<<name<<"\t"<<merge1.lseq[name][i]<<"\t"<<begin_insrt<<endl;
-//cout<<name<<"\t"<<merge1.lseq[name][i]<<"\t"<<begin_insrt<<"\t"<<merge.Ori[name][i-1]<<"\t"<<merge.Ori[name][i]<<"\t"<<merge.Ori[name][i+1]<<endl;
-//}
+
 			if(begin_insrt == -1)
 			{
 					subseq.append(seqHolder);
@@ -1152,7 +1138,6 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 			}
 	
 		}
-
 		merged.seq[name] = seqHolder;
 		seqHolder.clear();
 		
@@ -1186,8 +1171,6 @@ vector<int> maxD(int & qf1,int & qe1, int & qf2, int & qe2)
 	Dist[d4].push_back(qe2);
 	d.push_back(d4);
 	sort(d.begin(),d.end());
-//cout<<d[0]<<" "<<d[1]<<" "<<d[2]<<" "<<d[3]<<endl;
-//cout<<Dist[d[3]][0]<<" "<<Dist[d[3]][1]<<endl;
 	return Dist[d[3]];
 }
 
@@ -1247,8 +1230,6 @@ int maxIntD(int & qf1,int & qe1, int & qf2, int & qe2)
 	Dist[d4].push_back(qe2);
 	d.push_back(d4);
 	sort(d.begin(),d.end());
-//cout<<Dist[d[3]][0]<<" "<<Dist[d[3]][1]<<endl;
-//cout<<abs(Dist[d[3]][0]-Dist[d[3]][1])<<endl;
 	return abs(Dist[d[3]][0]-Dist[d[3]][1]);
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -1333,7 +1314,6 @@ return min;
 string reversed(string &str)
 {
 	string str1;
-	//for(unsigned int i=(str.size()-1);i>-1;i--)
 	for(unsigned int i = 0;i<str.size();i++)
 	{
 		str1.push_back(str[(str.size()-1)-i]);
@@ -1385,7 +1365,6 @@ int Dist =0;
 		if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) //query is reverse oriented
 		{
 			qAlnMid = q_f - (Dist *0.5); // midpoint of the alignment
-//if(tempname == "ctg7180000002493 Backbone_53/0_562071"){cout<<qAlnMid<<"\t"<<qMid<<endl;}
 			if(qAlnMid > qMid)
 			{
 			 	merge.sideInfoQ[tempname] = 'R';
@@ -1399,7 +1378,6 @@ int Dist =0;
 				merge.sideInfoQ[tempname] = 'U';
 			}
 		}
-//cout<<tempname<<"\t"<<merge.sideInfoQ[tempname]<<endl;
 	}
 
 }
