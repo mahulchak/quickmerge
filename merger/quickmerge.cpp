@@ -1,7 +1,9 @@
 //This program takes two different assemblies in fasta format and uses the delta output from mummer to generate a merged asembly
 //The program does not correct any assembly errors. It only joins contigs. So if a contig was misassembled  by the main assembly program,
 //it will most likely remain misassembled. Currently, the program is intended to use when 30X or above pacbio data is available, such that at least a 
-//respectable self-assembly is available. Please send questions and bug reports to mchakrab@uci.edu
+//respectable self-assembly is available. 
+//Copyright (C) 2015  Mahul Chakraborty 
+//Please send questions and bug reports to mchakrab@uci.edu
 
 #include<iostream>
 #include<fstream>
@@ -99,7 +101,7 @@ int main(int argc, char * argv[])
 	writeAnchorSummary(merge);
 
 
-	findChain(merge,merge1);
+	findChain(merge,merge1,pbOnly,merged);
 	createMseq(merge,merge1);
 
 	fillOri(merge,merge1);	
