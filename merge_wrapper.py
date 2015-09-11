@@ -36,7 +36,7 @@ else:
 if args.length_cutoff:
   length_cutoff = args.length_cutoff
 else:
-length_cutoff = 0
+  length_cutoff = 0
 
 #run nucmer:
 if not args.no_nucmer and not args.no_delta:
