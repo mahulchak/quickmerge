@@ -45,7 +45,7 @@ if not args.no_nucmer and not args.no_delta:
 #run the delta filter on the nucmer alignment:
 if not args.no_delta and not args.stop_after_nucmer:
   with open(str(str(prefix)+'.rq.delta'), "w") as outfile:
-    subprocess.call(['delta-filter','-i','95',str(str(prefix)+'.delta')],stdout=outfile)
+    subprocess.call(['delta-filter','-i','95','-r','-q',str(str(prefix)+'.delta')],stdout=outfile)
 
 #append the correct options to the merger call:
 mergercall = ['quickmerge','-d',str(str(prefix)+'.rq.delta'),'-q',str(hypath),'-r',str(selfpath)]
