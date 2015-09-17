@@ -1,7 +1,7 @@
 # quickmerge
 What is quickmerge?
 
-quickmerge is a program that uses a simple concept to improve contiguity of genome assemblies, often with dramatic outcomes. The concept is simple but counterintuitive. It uses information from assemblies made with illumina short reads and Pacbio long reads to improve contiguities of the either assemblies.    
+quickmerge is a program that uses a simple concept to improve contiguity of genome assemblies, often with dramatic outcomes. The concept is simple but counterintuitive. It uses information from assemblies made with illumina short reads and Pacbio long reads to improve contiguities of an assembly generated with PacBio long reads alone. This is counterintuitive because illumina short reads are not typically considered to cover genomic regions which PacBio long reads cannot.    
 
 This package contains all necessary components to run the assembly merger program quickmerge. We also provide a set of test data so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
 
