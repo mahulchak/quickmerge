@@ -73,11 +73,13 @@ For both "hco" and "c", bigger the number, more stringent is the criteria for co
 
 -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the 'self_assembly.fasta'. E.g. if the N50 of your self_assembly.fasta is 2Mb. Then use 2000000 as your cutoff. Lowering this value will lead to more merging but may increase the probability of mis-joins. 
 
-4. EXTRA:
+4. FEW MORE THINGS:
 
 Although this program was written to merge a hybrid assembly and a PB-only assembly, it can also be used to merge two different PB-only assemblies (e.g. one generated with <a href="https://sourceforge.net/projects/wgs-assembler/files/wgs-assembler/">PBcR</a> and another generated with <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a>).
 
 If using a self-assembly as the reference did not improve your contiguity much (unlikely for low coverage PacBio sequence but possible for high coverage PacBio sequences), use the hybrid assembly as your reference and the self-assembly as your query.
+
+The fasta sequence headers should not have white spaces in them. In case they do, as might happen for assemblies obtained from  <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a> assembler, the white space needs to be removed before launcing the merging python script or before running mummer. Also, there cannot be any line breaks in the fasta sequence. We are currently in the process of adding these tools to our merging pipeline.  
 
 Assembly polishing with <a href="https://github.com/PacificBiosciences/GenomicConsensus">Quiver</a> before and after assembly merging is strongly recommended.
 ####################
