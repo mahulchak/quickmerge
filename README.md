@@ -1,18 +1,27 @@
 # quickmerge
+What is quickmerge?
 
-This package contains all necessary components to run the assembly merger program quickmerge. Please send questions and comments to mchakrab@uci.edu
+quickmerge is a program that uses a simple concept to improve contiguity of genome assemblies, often with dramatic outcomes. The concept is simple but counterintuitive. It uses information from assemblies made with illumina short reads and Pacbio long reads to improve contiguities of the either assemblies.    
+
+This package contains all necessary components to run the assembly merger program quickmerge. We also provide a set of test data so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
 
 ######################
+1. DOWNLOAD
 
-INSTALL:
+To download the latest version of quickmerge and <a href "https://sourceforge.net/projects/mummer/files/">MUMmer</a>, its primary dependency, you can clone the repository using 
+
+	git clone
+
+Alternatively, you can download it as a zip file.
+
+2. INSTALL:
 
 UNIX:
-
-to install on a unix-based system, enter the following into the command line from the directory that this readme originated from:
+To install on a unix-based system, enter the following into the command line from the directory that this readme originated from:
 
 	bash make_merger.sh
 
-This will compile 'quickmerge' and <a href "https://sourceforge.net/projects/mummer/files/">MUMmer</a>, its primary dependency. Also requires GNU c++ compiler.
+This will compile 'quickmerge' and MUMMer. This requires GNU c++ compiler.
 
 NON-UNIX:
 
@@ -30,7 +39,7 @@ then, enter the 'MUMmer3.23' directory and enter the following commands, as spec
 
 #####################
 
-RUNNING MERGER:
+3. RUNNING QUICKMERGE:
 
 WRAPPER:
 
@@ -64,8 +73,12 @@ For both "hco" and "c", bigger the number, more stringent is the criteria for co
 
 -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the 'self_assembly.fasta'. E.g. if the N50 of your self_assembly.fasta is 2Mb. Then use 2000000 as your cutoff. Lowering this value will lead to more merging but may increase the probability of mis-joins. 
 
+4. EXTRA:
+
 Although this program was written to merge a hybrid assembly and a PB-only assembly, it can also be used to merge two different PB-only assemblies (e.g. one generated with <a href="https://sourceforge.net/projects/wgs-assembler/files/wgs-assembler/">PBcR</a> and another generated with <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a>).
 
-Assembly polishing with <a href="https://github.com/PacificBiosciences/GenomicConsensus">Quiver</a> before or/and after assembly merging is recommended.
+If using a self-assembly as the reference did not improve your contiguity much (unlikely for low coverage PacBio sequence but possible for high coverage PacBio sequences), use the hybrid assembly as your reference and the self-assembly as your query.
+
+Assembly polishing with <a href="https://github.com/PacificBiosciences/GenomicConsensus">Quiver</a> before and after assembly merging is strongly recommended.
 ####################
 If you find this program useful, please cite our paper.
