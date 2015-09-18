@@ -66,7 +66,10 @@ for iteration in range(0,2):
             print line # debug line
             if len(header) > 0 and len(seq) > 0:
               tout.write(header + "\n" + seq + "\n")
-            header = line
+            if not " " in line:
+              header = line
+            else:
+              header = line.split(" ")[0]
             seq = ""
           else:
             seq = seq + line
