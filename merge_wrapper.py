@@ -38,6 +38,46 @@ if args.length_cutoff:
 else:
   length_cutoff = 0
 
+#check for fasta compatibility:
+testpaths = [str(hypath),str(selfpath)]
+order = ["hybrid","self"]
+for iteration in range(0,2):
+  file = testpaths[iteration]
+  with open(file,"r") as tfile:
+    i = 0
+    ok = True
+    for linea in tfile:
+      line = linea.rstrip('\n')
+      if i % 2 == 0 and line[0] != ">": ok = False
+      if " " in line: ok = False
+      i += 1
+    
+    #if fasta isn't compatible, make oneline version of fasta:
+    if not ok:
+      tfile.seek(0)
+      tempoutpath = order[iteration] + "_oneline.fa"
+      with open(tempoutpath,"w") as tout:
+        header = ""
+        seq = ""
+        for linea in tfile:
+          line = linea.rstrip('\n')
+          print line # debug line
+          if line[0] == ">":
+            print line # debug line
+            if len(header) > 0 and len(seq) > 0:
+              tout.write(header + "\n" + seq + "\n")
+            header = line
+            seq = ""
+          else:
+            seq = seq + line
+        tout.write(header + "\n" + seq + "\n")
+      #change hypath and selfpath to use the temporary (oneline) fastas:
+      if iteration == 0:
+        hypath = tempoutpath
+      else:
+        selfpath = tempoutpath
+      
+
 #run nucmer:
 if not args.no_nucmer and not args.no_delta:
   subprocess.call(['nucmer','-l','100','-prefix',str(prefix),str(selfpath),str(hypath)])
