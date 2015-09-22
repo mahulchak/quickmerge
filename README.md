@@ -1,7 +1,7 @@
 # quickmerge
 What is quickmerge?
 
-quickmerge is a program that uses a simple concept to improve contiguity of genome assemblies based on long molecule sequences, often with dramatic outcomes. The concept is simple but counterintuitive. It uses information from assemblies made with illumina short reads and Pacbio long reads to improve contiguities of an assembly generated with PacBio long reads alone. This is counterintuitive because illumina short reads are not typically considered to cover genomic regions which PacBio long reads cannot.    
+quickmerge is a program that uses a simple concept to improve contiguity of genome assemblies based on long molecule sequences, often with dramatic outcomes. The program uses information from assemblies made with illumina short reads and Pacbio long reads to improve contiguities of an assembly generated with PacBio long reads alone. This is counterintuitive because illumina short reads are not typically considered to cover genomic regions which PacBio long reads cannot. Although we have not evaluated this program for assemblies generated with Oxford nanopore sequences, the program should work ONP-assemblies too.    
 
 This package contains all necessary components to run quickmerge. We also provide a set of test data (currrently available on request) so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
 
@@ -79,7 +79,7 @@ Although this program was written to merge a hybrid assembly and a PB-only assem
 
 If using a self-assembly as the reference did not improve your contiguity much (unlikely for low coverage PacBio sequence but possible for high coverage PacBio sequences), use the hybrid assembly as your reference and the self-assembly as your query.
 
-The fasta sequence headers should not have white spaces in them. In case they do, as might happen for assemblies obtained from  <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a> assembler, the white space needs to be removed before launcing the merging python script or before running mummer. Also, there cannot be any line breaks in the fasta sequence. We are currently in the process of adding these tools to our merging pipeline.  
+The fasta sequence headers should not have white spaces in them. In case they do, as might happen for assemblies obtained from  <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a> assembler, the white space needs to be removed before launcing the merging python script or before running mummer. Also, there cannot be any line breaks in the fasta sequence. We are currently in the process of adding additional tools to our merging pipeline which will take care of these format issues.  
 
 Assembly polishing with <a href="https://github.com/PacificBiosciences/GenomicConsensus">Quiver</a> before and after assembly merging is strongly recommended.
 ####################
