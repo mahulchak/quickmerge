@@ -397,6 +397,7 @@ void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double pr
 		prop = merge.ovlStore[tempname]/(double)merge.nOvlStore[tempname];
 		if((prop>propAnchor) && (merge.ref_len[tempname]>merge.q_len[tempname]) && (merge.ref_len[tempname]>length))
 		{
+//if(merge.r_name[i] == "ctg7180000002162"){cout<<merge.q_name[i]<<endl;}
 			merge.anchor[tempname].push_back(merge.r_name[i]);
 			merge.anchor[tempname].push_back(merge.q_name[i]);
 			fillToRemove(merge,merge.q_name[i]);//here add only those for which query is an innie
@@ -640,7 +641,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		if((lQseq == "") && (rQseq == "")) //for those which are innie
 		{
 		refSeqToAdd.push_back(tempname);
-		cout<<tempname<<endl;
+	//	cout<<tempname<<endl;
 		}
 		while((rQseq != "")|(rRseq != "")|(lQseq != "")|(lRseq != ""))	
 		{
@@ -742,7 +743,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		if(find(refSeqToRemove.begin(),refSeqToRemove.end(),refSeqToAdd[i]) == refSeqToRemove.end())
 		{
 		merged.seq[refSeqToAdd[i]] = pbOnly.seq[refSeqToAdd[i]];
-		cout<<refSeqToAdd[i]<<endl;
+	//	cout<<refSeqToAdd[i]<<endl;
 		}
 	}
 }
@@ -1038,6 +1039,10 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						tempRef_st = mapQonRef(indexL1,indexL2,merge);
 						subseq = ""; // may be add a single base if this causes segfault for revcom
 					}
+					//if((i>1)&& (merge1.lseq[name][i] == merge1.lseq[name][i-2]) && (merge.Ori[name][i] != merge.Ori[name][i-2])&& begin_insrt ==-1) // if two queries are same but they have different orientation with respect to the reference in the middle
+				//	{
+				//		begin_insrt = 1;
+				//	}
 				}
 				if( i == (merge1.lseq[name].size()-1)) // if this is the last element
 				{
@@ -1106,6 +1111,11 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					{
 						begin_insrt = -1;
 					}
+					if((merge.Ori[name][i] == -1) && (i ==1))
+					{
+						begin_insrt = -1;
+					}
+ 
 				}
 				if(i == (merge1.lseq[name].size()-1))
 				{
@@ -1126,6 +1136,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					subseq = subseqR;
 				}
 			}
+if(name =="ctg7180000002162"){cout<<merge1.lseq[name][i]<<"\t"<<begin_insrt<<endl;}
 
 			if(begin_insrt == -1)
 			{
