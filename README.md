@@ -1,7 +1,7 @@
 # quickmerge
 What is quickmerge?
 
-quickmerge uses a simple concept to improve contiguity of genome assemblies based on long molecule sequences, often with dramatic outcomes. The program uses information from assemblies made with illumina short reads and PacBio long reads to improve contiguities of an assembly generated with PacBio long reads alone. This is counterintuitive because illumina short reads are not typically considered to cover genomic regions which PacBio long reads cannot. Although we have not evaluated this program for assemblies generated with Oxford nanopore sequences, the program should work ONP-assemblies too.    
+quickmerge uses a simple concept to improve contiguity of genome assemblies based on long molecule sequences, often with dramatic outcomes. The program uses information from assemblies made with illumina short reads and PacBio long reads to improve contiguities of an assembly generated with PacBio long reads alone. This is counterintuitive because illumina short reads are not typically considered to cover genomic regions which PacBio long reads cannot. Although we have not evaluated this program for assemblies generated with Oxford nanopore sequences, the program should work with ONP-assemblies too.    
 
 The package contains all necessary components to run quickmerge. We also provide a set of test data (currrently available on request) so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
 
@@ -81,7 +81,9 @@ If using a self-assembly as the reference did not improve your contiguity much (
 
 The fasta sequence headers should not have white spaces in them. In case they do, as might happen for assemblies obtained from  <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a> assembler, the white space needs to be removed before launcing the merging python script or before running mummer. Also, there cannot be any line breaks in the fasta sequence. We are currently in the process of adding additional tools to our merging pipeline which will take care of these format issues.  
 
-Assembly polishing with <a href="https://github.com/PacificBiosciences/GenomicConsensus">Quiver</a> before and after assembly merging is strongly recommended.
+You can run Ka-kit's <a href="https://github.com/kakitone/finishingTool">finisherSC</a> after running quickmerge to improve the contiguity even further.
+
+Assembly polishing with <a href="https://github.com/PacificBiosciences/GenomicConsensus">Quiver</a> before and after assembly merging is strongly recommended. However, if you are running finisherSC, you may perform the quiver polishing after the finisher step.
 
 Check the merged assembly by aligning the hybrid and/or PB only assembly to the merged assembly (you can use nucmer -mumreference and mummerplot for alignment and dot plot visualization).
 ####################
