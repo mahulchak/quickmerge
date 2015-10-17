@@ -87,4 +87,4 @@ Assembly polishing with <a href="https://github.com/PacificBiosciences/GenomicCo
 
 Check the merged assembly by aligning the hybrid and/or PB only assembly to the merged assembly (you can use nucmer -mumreference and mummerplot for alignment and dot plot visualization).
 ####################
-If you find this program useful, please cite our paper.
+If you find this program useful, please cite <a href="http://biorxiv.org/content/early/2015/10/16/029306">our paper</a> that describes the program.
