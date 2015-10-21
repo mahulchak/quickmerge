@@ -61,9 +61,9 @@ for iteration in range(0,2):
         seq = ""
         for linea in tfile:
           line = linea.rstrip('\n')
-          print line # debug line
+          #print line # debug line
           if line[0] == ">":
-            print line # debug line
+            #print line # debug line
             if len(header) > 0 and len(seq) > 0:
               tout.write(header + "\n" + seq + "\n")
             if not " " in line:

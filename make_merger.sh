@@ -1,6 +1,6 @@
 #!/bin/bash
 cd merger
-g++ -Wall work_in_prog_temp.cpp exp_testlib.cpp -o merger
+make
 mergerpath=`pwd`
 cd ../MUMmer3.23
 make check
