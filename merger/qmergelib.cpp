@@ -977,7 +977,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 							begin_insrt = -1; // this is experimental
 						}
 					}
-					if(merge.sideInfo[indexL2] == 'L')
+					if((merge.sideInfo[indexL2] == 'L') || (merge1.lseq[name][0] == merge1.lseq[name][merge1.lseq[name].size()-1]))
 					{	
 						subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q2_f);
 					}
@@ -1103,7 +1103,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					r2_last = max(v1[0],v1[1]);
 					subseq = pbOnly.seq[merge1.lseq[name][i]].substr(r1_f,(r2_last - r1_f)); 
 					tempRef_st = 0; //reset tempRef_st
-					if((i<2)&&(merge.Ori[name][i] == -1) && (name == merge1.lseq[name][i]))
+					if((i<2)&&(merge.Ori[name][i] == -1))// && (name == merge1.lseq[name][i])
 					{
 						begin_insrt = -1;
 					}
@@ -1136,7 +1136,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					subseq = subseqR;
 				}
 			}
-if(name =="ctg7180000002162"){cout<<merge1.lseq[name][i]<<"\t"<<begin_insrt<<endl;}
+//if(name =="ctg7180000002162"){cout<<merge1.lseq[name][i]<<"\t"<<begin_insrt<<endl;}
 
 			if(begin_insrt == -1)
 			{
