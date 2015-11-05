@@ -1056,7 +1056,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
                                                 {
                                                         subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
-                                                        cout<<q1_f<<"\t"<<q1_last<<"\t"<<q2_f<<"\t"<<q2_last;
+                                                        
                                                 }
 						
 					}
