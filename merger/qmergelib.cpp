@@ -397,7 +397,6 @@ void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double pr
 		prop = merge.ovlStore[tempname]/(double)merge.nOvlStore[tempname];
 		if((prop>propAnchor) && (merge.ref_len[tempname]>merge.q_len[tempname]) && (merge.ref_len[tempname]>length))
 		{
-//if(merge.r_name[i] == "ctg7180000002162"){cout<<merge.q_name[i]<<endl;}
 			merge.anchor[tempname].push_back(merge.r_name[i]);
 			merge.anchor[tempname].push_back(merge.q_name[i]);
 			fillToRemove(merge,merge.q_name[i]);//here add only those for which query is an innie
@@ -641,7 +640,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		if((lQseq == "") && (rQseq == "")) //for those which are innie
 		{
 		refSeqToAdd.push_back(tempname);
-	//	cout<<tempname<<endl;
+		cout<<tempname<<endl;
 		}
 		while((rQseq != "")|(rRseq != "")|(lQseq != "")|(lRseq != ""))	
 		{
@@ -743,7 +742,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		if(find(refSeqToRemove.begin(),refSeqToRemove.end(),refSeqToAdd[i]) == refSeqToRemove.end())
 		{
 		merged.seq[refSeqToAdd[i]] = pbOnly.seq[refSeqToAdd[i]];
-	//	cout<<refSeqToAdd[i]<<endl;
+		cout<<refSeqToAdd[i]<<endl;
 		}
 	}
 }
@@ -848,6 +847,7 @@ void fillOri(asmMerge & merge, asmMerge & merge1)
 					merge.Ori[name].push_back(prev); //prev = prev *1 because reference follows orientation of the query
 				}
 				//prev = prev; // unnecessary but shows that prev does not change
+
 				if(i>0 && (merge.q_st[merge1.rseq[name][i-1]][0] < merge.q_end[merge1.rseq[name][i-1]][0])) // if previous alignment was not reverse complementary
 				{				
 					merge.Ori[name].push_back(prev);	
@@ -963,6 +963,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 				indexL2 = merge1.rseq[name][i]; // index name coresponding to the query element
 				q2_f = merge.q_st[indexL2][0];
 				q2_last = merge.q_end[indexL2][merge.q_end[indexL2].size()-1];	
+			
 				if(q2_f > merge.q_end[indexL2][0]) // if query is reverse oriented
 				{
 					subseq = hybrid.seq[merge1.lseq[name][i]].substr(q2_f); //take q_f to the end of the sequence
@@ -972,6 +973,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					if(merge.sideInfo[indexL2] == 'R')
 					{					
 						subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q2_last);
+                                
 						if(merge1.lseq[name][i] != merge1.lseq[name][merge1.lseq[name].size()-1]) //if the first and last element are not same
 						{
 							begin_insrt = -1; // this is experimental
@@ -1026,7 +1028,6 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					indexL2 = merge1.rseq[name][i];
 					q2_f = merge.q_st[indexL2][0];
 					q2_last = merge.q_end[indexL2][merge.q_end[indexL2].size() -1];
-
 					if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 0) //alignments are non-overlapping
 					{
 						v1 = minD(q1_f,q1_last,q2_f,q2_last);
@@ -1039,10 +1040,6 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						tempRef_st = mapQonRef(indexL1,indexL2,merge);
 						subseq = ""; // may be add a single base if this causes segfault for revcom
 					}
-					//if((i>1)&& (merge1.lseq[name][i] == merge1.lseq[name][i-2]) && (merge.Ori[name][i] != merge.Ori[name][i-2])&& begin_insrt ==-1) // if two queries are same but they have different orientation with respect to the reference in the middle
-				//	{
-				//		begin_insrt = 1;
-				//	}
 				}
 				if( i == (merge1.lseq[name].size()-1)) // if this is the last element
 				{
@@ -1058,7 +1055,8 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						}
 						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
                                                 {
-                                                        subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last); //coordinate system works a little funky in this case
+                                                        subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
+                                                        cout<<q1_f<<"\t"<<q1_last<<"\t"<<q2_f<<"\t"<<q2_last;
                                                 }
 						
 					}
@@ -1068,11 +1066,17 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						{
 							subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_f);
 						}
-						if((merge.sideInfo[merge1.rseq[name][i-1]] == 'R')||(merge1.lseq[name][i] == merge1.lseq[name][0])) // in either of these cases
+						if(merge.sideInfo[merge1.rseq[name][i-1]] == 'R')
 						{
 							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
 						}
+						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
+						{
+							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
+							cout<<q1_f<<"\t"<<q1_last<<"\t"<<q2_f<<"\t"<<q2_last;
+						}
 					}
+
 				}
 
 				if(merge.Ori[name][i] == -1)
@@ -1107,7 +1111,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					r2_last = max(v1[0],v1[1]);
 					subseq = pbOnly.seq[merge1.lseq[name][i]].substr(r1_f,(r2_last - r1_f)); 
 					tempRef_st = 0; //reset tempRef_st
-					if((i<2)&&(merge.Ori[name][i] == -1))// && (name == merge1.lseq[name][i])
+					if((i<2)&&(merge.Ori[name][i] == -1)) // && (name == merge1.lseq[name][i]) this was inside earlier
 					{
 						begin_insrt = -1;
 					}
@@ -1115,11 +1119,6 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					{
 						begin_insrt = -1;
 					}
-					if((merge.Ori[name][i] == -1) && (i ==1))
-					{
-						begin_insrt = -1;
-					}
- 
 				}
 				if(i == (merge1.lseq[name].size()-1))
 				{
@@ -1140,13 +1139,13 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					subseq = subseqR;
 				}
 			}
-//if(name =="ctg7180000002162"){cout<<merge1.lseq[name][i]<<"\t"<<begin_insrt<<endl;}
 
 			if(begin_insrt == -1)
 			{
 					subseq.append(seqHolder);
 					seqHolder = subseq;
 			}
+
 			if(begin_insrt == 1)
 			{
 				seqHolder.append(subseq);
