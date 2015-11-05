@@ -1056,6 +1056,10 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_f,(merge.q_len[merge1.rseq[name][i-1]] - q1_f));
 
 						}
+						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
+                                                {
+                                                        subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last); //coordinate system works a little funky in this case
+                                                }
 						
 					}
 					if(merge.q_st[merge1.rseq[name][i-1]][0] < merge.q_end[merge1.rseq[name][i-1]][0]) // if query is forward oriented
@@ -1064,7 +1068,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						{
 							subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_f);
 						}
-						if(merge.sideInfo[merge1.rseq[name][i-1]] == 'R')
+						if((merge.sideInfo[merge1.rseq[name][i-1]] == 'R')||(merge1.lseq[name][i] == merge1.lseq[name][0])) // in either of these cases
 						{
 							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
 						}
