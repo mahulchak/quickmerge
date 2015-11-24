@@ -38,7 +38,7 @@ The package contains all necessary components to run quickmerge. We also provide
 	make install
 ```
 3. RUNNING QUICKMERGE:
-  *WRAPPER:
+   WRAPPER:
 
 The simplest way to run 'merger' is to use the python wrapper 'merge_wrapper_v2.py':
 ```
