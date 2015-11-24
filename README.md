@@ -28,15 +28,15 @@ The package contains all necessary components to run quickmerge. We also provide
    On a non-unix system, you will have to manually compile these two programs, like so:
 
     1. first, enter the 'merger' directory and enter the following command to make the merger program:
-   ```
-	make
-   ```
+    ```
+ 	make
+    ```
     2. then, enter the 'MUMmer3.23' directory and enter the following commands, as specified in the MUMmer readme:
-   ```
+    ```
 	make check
 
 	make install
-   ```
+    ```
 3. RUNNING QUICKMERGE:
    WRAPPER:
 
