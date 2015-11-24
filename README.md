@@ -8,24 +8,24 @@ The package contains all necessary components to run quickmerge. We also provide
 
 1. DOWNLOAD
 
-...To download the latest version of quickmerge and <a href "https://sourceforge.net/projects/mummer/files/">MUMmer</a>, its primary dependency, you can clone the repository using 
+   To download the latest version of quickmerge and <a href "https://sourceforge.net/projects/mummer/files/">MUMmer</a>, its primary dependency, you can clone the repository using 
 
 	git clone
 
-...Alternatively, you can download it as a zip file.
+   Alternatively, you can download it as a zip file.
 
 2. INSTALL:
 
-..*UNIX:
-...To install on a unix-based system, enter the following into the command line from the directory that this readme originated from:
+  *UNIX:
+   To install on a unix-based system, enter the following into the command line from the directory that this readme originated from:
 
 	bash make_merger.sh
 
-...This will compile 'quickmerge' and MUMMer. Requires GNU c++ compiler.
+   This will compile 'quickmerge' and MUMMer. Requires GNU c++ compiler.
 
-..*NON-UNIX:
+  *NON-UNIX:
 
-...On a non-unix system, you will have to manually compile these two programs, like so:
+   On a non-unix system, you will have to manually compile these two programs, like so:
 
 ..1. first, enter the 'merger' directory and enter the following command to make the merger program:
 
