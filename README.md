@@ -9,9 +9,9 @@ The package contains all necessary components to run quickmerge. We also provide
 1. DOWNLOAD
 
    To download the latest version of quickmerge and <a href "https://sourceforge.net/projects/mummer/files/">MUMmer</a>, its primary dependency, you can clone the repository using 
-```
+   ```
     git clone
-```
+   ```
    Alternatively, you can download it as a zip file.
 
 2. INSTALL:
