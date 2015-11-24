@@ -16,27 +16,26 @@ The package contains all necessary components to run quickmerge. We also provide
 
 2. INSTALL:
 
-  *UNIX:
+  UNIX:
    To install on a unix-based system, enter the following into the command line from the directory that this readme originated from:
 
 	bash make_merger.sh
 
    This will compile 'quickmerge' and MUMMer. Requires GNU c++ compiler.
 
-  *NON-UNIX:
+  NON-UNIX:
 
    On a non-unix system, you will have to manually compile these two programs, like so:
 
-..1. first, enter the 'merger' directory and enter the following command to make the merger program:
+  1. first, enter the 'merger' directory and enter the following command to make the merger program:
 
 	make
 
-..2. then, enter the 'MUMmer3.23' directory and enter the following commands, as specified in the MUMmer readme:
+  2. then, enter the 'MUMmer3.23' directory and enter the following commands, as specified in the MUMmer readme:
 
 	make check
 
 	make install
-
 
 3. RUNNING QUICKMERGE:
 
