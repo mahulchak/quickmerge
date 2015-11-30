@@ -322,13 +322,13 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 				ovrhangQ = merge.q_len[tempname] - Dist; // this would be zero for innie (overhangRef = merge.ref_len[tempname] - Dist) 
 				ovrhangR = merge.ref_len[tempname] - Dist;
 				if(ovrhangQ == -1) //this is to fix edge cases when alignment edges coincides with sequence ends
- 357                                 {
- 358                                         ovrhangQ = 0 ;
- 359                                 }
- 360                                 if(ovrhangR == -1)
- 361                                 {
- 362                                         ovrhangR = 0;
- 363                                 }
+                                     {
+                                             ovrhangQ = 0 ;
+                                     }
+                                if(ovrhangR == -1)
+                                     {
+                                             ovrhangR = 0;
+                                     }
 
 			}
 			if(((ref_f-1) < (q_f-1)) && ((merge.ref_len[tempname] - ref_last)<(merge.q_len[tempname] - q_last))) // when ref is innie but query is not
