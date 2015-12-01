@@ -3,6 +3,11 @@ What is quickmerge?
 
 quickmerge uses a simple concept to improve contiguity of genome assemblies based on long molecule sequences, often with dramatic outcomes. The program uses information from assemblies made with illumina short reads and PacBio long reads to improve contiguities of an assembly generated with PacBio long reads alone. This is counterintuitive because illumina short reads are not typically considered to cover genomic regions which PacBio long reads cannot. Although we have not evaluated this program for assemblies generated with Oxford nanopore sequences, the program should work with ONP-assemblies too.    
 
+Why use quickmerge?
+
+ i) It is superfast. Takes less than a minute to run most genomes. You run nucmer once (nucmer is the most time consuming phase) and then you can run quickmerge over a large number of parameter space in a very short time.
+ ii) Requires only fasta files and does not need any special data or computational resources.
+ 
 The package contains all necessary components to run quickmerge. We also provide a set of test data (currrently available on request) so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
 
 
