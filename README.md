@@ -5,8 +5,8 @@ quickmerge uses a simple concept to improve contiguity of genome assemblies base
 
 Why use quickmerge?
 
- i) It is superfast. Takes less than a minute to run most genomes. You run nucmer once (nucmer is the most time consuming phase) and then you can run quickmerge over a large number of parameter space in a very short time.
- ii) Requires only fasta files and does not need any special data or computational resources.
+ i. It is superfast. Takes less than a minute to run most genomes. You run nucmer once (nucmer is the most time consuming phase) and then you can run quickmerge over a large number of parameter space in a very short time.
+ ii. Requires only fasta files and does not need any special data or computational resources.
  
 The package contains all necessary components to run quickmerge. We also provide a set of test data (currrently available on request) so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
 
