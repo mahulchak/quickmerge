@@ -6,7 +6,7 @@ quickmerge uses a simple concept to improve contiguity of genome assemblies base
 Why use quickmerge?
 
  * Saves money. Illumina sequences are much cheaper than PacBio or ONP long reads. So quickmerge allows you to cut your long molecule requirement by half (or more) by replacing the same with Illumina short reads. E.g. if you think you would get a N50 of 8Mb from 75X PacBio reads, try sequencing 40X PacBio and 70X Illumina reads instead of 75X PacBio reads. You may not need that extra 30X PacBio reads.
-   ii) It is superfast. Takes less than a minute to run on most genomes. You run nucmer once (nucmer is the most time consuming step) and then you can run quickmerge over a large number of parameters in a very short time.
+ * It is superfast. Takes less than a minute to run on most genomes. You run nucmer once (nucmer is the most time consuming step) and then you can run quickmerge over a large number of parameters in a very short time.
    ii) Requires only fasta files and does not depend on any special data or computational resources.
  
 The package contains all necessary components to run quickmerge. We also provide a set of test data (currrently available on request) so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
