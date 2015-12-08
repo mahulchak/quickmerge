@@ -61,8 +61,8 @@ void fillAnchor(asmMerge & merge, asmMerge & merge1, double propAnchor, double p
 void fillSeq(fastaSeq & fasta, ifstream& fin, char c);
 void fillSeq(fastaSeq & fasta, ifstream& fin);
 void writeAnchorSummary(asmMerge & merge);
-void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged);
-vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname);
+void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged,double propCutoff);
+vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname,asmMerge & merge,string & guruRef,double propCutoff);
 string longestLeft(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ, string & prevElem);
 string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ, string & prevElem);
 void createMseq(asmMerge & merge, asmMerge & merge1);
@@ -82,4 +82,5 @@ vector<int> maxD(int & qf1,int & qe1, int & qf2, int & qe2);
 string reversed(string & str);
 int returnIndex (vector<string> & myvector, string & str);
 void assignStrand(asmMerge & merge);
+void discAnchor(string & guruQ, asmMerge & merge,string & guruRef,double propCutoff);
 #endif

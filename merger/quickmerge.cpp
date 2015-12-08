@@ -101,7 +101,7 @@ int main(int argc, char * argv[])
 	writeAnchorSummary(merge);
 
 
-	findChain(merge,merge1,pbOnly,merged);
+	findChain(merge,merge1,pbOnly,merged,cutoff);
 	createMseq(merge,merge1);
 
 	fillOri(merge,merge1);	

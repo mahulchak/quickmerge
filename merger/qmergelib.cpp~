@@ -226,7 +226,7 @@ int q_last,noLovl,noRovl;
 			if(((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1)) && !((q_last -1) > (merge.ref_len[tempname] - ref_last)))// if query has a left overhang but no left overhang
 			{
 				noLovl = merge.ref_st[tempname][0];
-				noRovl = q_last -1 ;
+				noRovl = q_last;
 				
 			}
 			if(((q_last -1) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1))) // if query has a right overhang but no right overhang
@@ -238,7 +238,7 @@ int q_last,noLovl,noRovl;
 			if(merge.innie[tempname] == 1)
 			{
 				noLovl = merge.q_len[tempname] - merge.q_st[tempname][0];
-				noRovl = q_last-1;
+				noRovl = q_last;
 			}
 			if(((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1)) && ((q_last -1) > (merge.ref_len[tempname] - ref_last))) // if query has both right and left overhangs
 			{
@@ -321,15 +321,7 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 				Dist = abs((q_f - q_last)) + merge.nOvlStore[tempname]; 
 				ovrhangQ = merge.q_len[tempname] - Dist; // this would be zero for innie (overhangRef = merge.ref_len[tempname] - Dist) 
 				ovrhangR = merge.ref_len[tempname] - Dist;
-				if(ovrhangQ == -1) //this is to fix edge cases when alignment edges coincides with sequence ends
-                                     {
-                                             ovrhangQ = 0 ;
-                                     }
-                                if(ovrhangR == -1)
-                                     {
-                                             ovrhangR = 0;
-                                     }
-
+				
 			}
 			if(((ref_f-1) < (q_f-1)) && ((merge.ref_len[tempname] - ref_last)<(merge.q_len[tempname] - q_last))) // when ref is innie but query is not
 			{
@@ -361,14 +353,6 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 				Dist = abs((q_f - q_last)) + merge.nOvlStore[tempname]; 
 				ovrhangQ = merge.q_len[tempname] - Dist; // this would be zero for innie (ovrhangRef = merge.ref_len[tempname] -Dist)
 				ovrhangR = merge.ref_len[tempname] -Dist;
-				if(ovrhangQ == -1) //this is to fix edge cases when alignment edges coincides with sequence ends
-				{
-					ovrhangQ = 0 ;
-				}
-				if(ovrhangR == -1)
-				{
-					ovrhangR = 0;
-				}
 			}
 			if(((ref_f-1) < (merge.q_len[tempname] - q_f)) && ((merge.ref_len[tempname] - ref_last) < (q_last-1))) // when ref is innie but query is not
 			{
@@ -473,7 +457,7 @@ void writeAnchorSummary(asmMerge & merge)
 	fout.close();
 }
 ///////////////////////////////////////////////////////////////////
-vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname,asmMerge & merge,string & guruRef,double propCutoff) // use tempvectors for names for searching. temp_rname is where tempname is. temp_qname is where the alignment partner of r_name is.
+vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname) // use tempvectors for names for searching. temp_rname is where tempname is. temp_qname is where the alignment partner of r_name is.
 {
 unsigned int i =0;
 vector<string> v1;
@@ -482,10 +466,6 @@ vector<string> v1;
         {
                	if(temp_rname[i] == tempname)
         	{
-			if (find(merge.q_name.begin(),merge.q_name.end(),tempname) != merge.q_name.end())
-			{
-				discAnchor(tempname,merge,guruRef,propCutoff);
-			}
                 	 v1.push_back(temp_qname[i]);//may be add the condition that only overlaps above a certain point makes it into the list
 			temp_qname[i]="";
 			temp_rname[i] = ""; //akin to erasing the element. actual erasing is more time consuming.
@@ -623,7 +603,7 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 return lStr;
 }
 ///////////////////////////////////////////////////////////////////////////////////
-void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged,double propCutoff)
+void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged)
 {
 	vector<string> temp_rname;
 	vector<string> temp_qname;
@@ -636,7 +616,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 	vector<string> refSeqToAdd;
 	vector<string> refSeqToRemove;
 	string tempname,lRseq,lQseq,rRseq,rQseq,tlRseq,trRseq,tlQseq,trQseq;
-	string ref,refForSideL,refForSideR,prevElem,guruR; //guruR stores the name of the anchor contig
+	string ref,refForSideL,refForSideR,prevElem;
 	for(map<string,vector<string> >::iterator it= merge.cAnchor.begin();it!=merge.cAnchor.end();it++)
 	{
 		lRseq = ""; //left reference	
@@ -651,11 +631,8 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		refForSideR = "";
 		prevElem = "";
 		tempname = it->first; // tempname is the reference name
-
-
 		ref = tempname;
-		guruR = tempname;
-		seqs = vfind(tempname,temp_rname,temp_qname,merge,guruR,propCutoff);
+		seqs = vfind(tempname,temp_rname,temp_qname);
 		fillToRemove(merge,seqs);
 		
 		lQseq = longestLeft(tempname,seqs,merge,'Q','N',prevElem);
@@ -663,12 +640,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		if((lQseq == "") && (rQseq == "")) //for those which are innie
 		{
 		refSeqToAdd.push_back(tempname);
-		//cout<<tempname<<endl;
-		}
-		if(merge.cAnchor[tempname].size() == 0) //anchors which are partners of previously used query chain elements
-		{
-			lQseq = "";
-			rQseq = "";
+		cout<<tempname<<endl;
 		}
 		while((rQseq != "")|(rRseq != "")|(lQseq != "")|(lRseq != ""))	
 		{
@@ -676,7 +648,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			if(lQseq != "")
 			{
 				merge.lseq[tempname].push_back(lQseq);
-				seqs = vfind(lQseq,temp_qname,temp_rname,merge,guruR,propCutoff); // temp_qname is where lQseq should be present. temp_rname is where the references will be searched from
+				seqs = vfind(lQseq,temp_qname,temp_rname); // temp_qname is where lQseq should be present. temp_rname is where the references will be searched from
 				if(!seqs.empty()) //check that empty returns null when vfind does not resturn an argument
 				{
 					if(ref != "") //if tempname is currently the reference
@@ -701,7 +673,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			if(lRseq != "")
 			{
 				merge.lseq[tempname].push_back(lRseq);
-				seqs = vfind(lRseq,temp_rname,temp_qname,merge,guruR,propCutoff);
+				seqs = vfind(lRseq,temp_rname,temp_qname);
 				fillToRemove(merge,seqs);
 				if(!seqs.empty())
 				{
@@ -721,7 +693,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			if(rQseq != "")
 			{
 				merge.rseq[tempname].push_back(rQseq);
-				seqs = vfind(rQseq,temp_qname,temp_rname,merge,guruR,propCutoff);
+				seqs = vfind(rQseq,temp_qname,temp_rname);
 				if(!seqs.empty())
 				{
 					if(ref != "") //because rRseq is empty when tempname was the previous reference
@@ -746,7 +718,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			if(rRseq != "")
 			{
 				merge.rseq[tempname].push_back(rRseq);
-				seqs = vfind(rRseq,temp_rname,temp_qname,merge,guruR,propCutoff);
+				seqs = vfind(rRseq,temp_rname,temp_qname);
 				fillToRemove(merge,seqs);
 				if(!seqs.empty())
 				{
@@ -765,13 +737,12 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			}
 		}
 	}
-
 	for(unsigned int i =0 ;i<refSeqToAdd.size();i++)
 	{
 		if(find(refSeqToRemove.begin(),refSeqToRemove.end(),refSeqToAdd[i]) == refSeqToRemove.end())
 		{
 		merged.seq[refSeqToAdd[i]] = pbOnly.seq[refSeqToAdd[i]];
-		//cout<<refSeqToAdd[i]<<endl;
+		cout<<refSeqToAdd[i]<<endl;
 		}
 	}
 }
@@ -1085,7 +1056,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
                                                 {
                                                         subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
-                                                        
+                                                        cout<<q1_f<<"\t"<<q1_last<<"\t"<<q2_f<<"\t"<<q2_last;
                                                 }
 						
 					}
@@ -1102,6 +1073,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
 						{
 							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
+							cout<<q1_f<<"\t"<<q1_last<<"\t"<<q2_f<<"\t"<<q2_last;
 						}
 					}
 
@@ -1303,7 +1275,7 @@ r2_end = merge.ref_end[tempname2][merge.ref_end[tempname2].size()-1];
 	{
 		if((q1_end<q2_end) && (q1_end > q2_f)) //q1_end is inside
 		{
-			cord = r2_f + (q1_end - q2_f);          //EDIT:11-19-2015 cord = r2_end - (q2_end - q1_end);
+			cord = r2_end - (q2_end - q1_end);
 		}
 		if((q1_f<q2_end) && (q1_f > q2_f)) // q1_f is inside		
 		{
@@ -1440,30 +1412,3 @@ void assignStrand(asmMerge & merge)
 		}
 	}
 }
-///////////////////////////////////////////////////////
-void discAnchor(string & guruQ, asmMerge & merge, string & guruRef,double propCutoff) //discard anchor contig that is partner of a query contig being used for chaining
-{
-	string temp,pastTemp;
-	double cutoff;
-	int count =0;
-	for(map<string,vector<string> >::iterator it = merge.cAnchor.begin(); it!= merge.cAnchor.end(); it++)
-	{
-		count ++;
-		temp = it->first;
-		pastTemp = temp; //storing temp for use in the next iteration
-		temp = temp.append(guruQ);
-		
-		if(merge.nOvlStore[temp] >0)
-		{
-			cutoff = merge.ovlStore[temp]/merge.nOvlStore[temp];
-		}
-
-		if((merge.ovlStore[temp]>0) && (guruRef != pastTemp) && (cutoff>propCutoff))
-		{
-			//cout<<guruRef<<"\t"<<temp<<"\t"<<merge.ovrHangQ[temp]<<"\t"<<it->first<<endl;
-			merge.cAnchor[it->first].clear();
-		}
-	
-	}
-}
-		
