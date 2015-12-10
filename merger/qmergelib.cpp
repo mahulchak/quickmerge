@@ -663,7 +663,6 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		if((lQseq == "") && (rQseq == "")) //for those which are innie
 		{
 		refSeqToAdd.push_back(tempname);
-		//cout<<tempname<<endl;
 		}
 		if(merge.cAnchor[tempname].size() == 0) //anchors which are partners of previously used query chain elements
 		{
@@ -677,6 +676,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			{
 				merge.lseq[tempname].push_back(lQseq);
 				seqs = vfind(lQseq,temp_qname,temp_rname,merge,guruR,propCutoff); // temp_qname is where lQseq should be present. temp_rname is where the references will be searched from
+				
 				if(!seqs.empty()) //check that empty returns null when vfind does not resturn an argument
 				{
 					if(ref != "") //if tempname is currently the reference
@@ -732,8 +732,8 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 					}
 					if(ref == "")
 					{
-						prevElem = refForSideR + rRseq;
-						trRseq = longestRt(rQseq,seqs,merge,'R',merge.sideInfoQ[rRseq+rQseq],prevElem);
+						prevElem = refForSideR + rQseq;
+						trRseq = longestRt(rQseq,seqs,merge,'R',merge.sideInfoQ[refForSideR+rQseq],prevElem);
 						prevElem = "";
 					}
 					rRseq = trRseq;
@@ -771,7 +771,6 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		if(find(refSeqToRemove.begin(),refSeqToRemove.end(),refSeqToAdd[i]) == refSeqToRemove.end())
 		{
 		merged.seq[refSeqToAdd[i]] = pbOnly.seq[refSeqToAdd[i]];
-		//cout<<refSeqToAdd[i]<<endl;
 		}
 	}
 }
@@ -1131,12 +1130,14 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					
 					if(tempRef_st != 0)
 					{
-						r1_last = tempRef_st; //transfer the number so that it is used in case of an overlap;
+						r1_f = tempRef_st;
+						//r1_last = tempRef_st; //transfer the number so that it is used in case of an overlap;
 						//v1 = maxD(r1_last,r1_last,r2_f,r2_last);//CHANGED
 					}
 					v1 = maxD(r1_f,r1_last,r2_f,r2_last); // maximum distance between coords from the two alignments
 					r1_f = min(v1[0],v1[1]);
 					r2_last = max(v1[0],v1[1]);
+
 					subseq = pbOnly.seq[merge1.lseq[name][i]].substr(r1_f,(r2_last - r1_f)); 
 					tempRef_st = 0; //reset tempRef_st
 					if((i<2)&&(merge.Ori[name][i] == -1)) // && (name == merge1.lseq[name][i]) this was inside earlier
@@ -1460,7 +1461,6 @@ void discAnchor(string & guruQ, asmMerge & merge, string & guruRef,double propCu
 
 		if((merge.ovlStore[temp]>0) && (guruRef != pastTemp) && (cutoff>propCutoff))
 		{
-			//cout<<guruRef<<"\t"<<temp<<"\t"<<merge.ovrHangQ[temp]<<"\t"<<it->first<<endl;
 			merge.cAnchor[it->first].clear();
 		}
 	
