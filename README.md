@@ -5,7 +5,7 @@ quickmerge uses a simple concept to improve contiguity of genome assemblies base
 
 Why use quickmerge?
 
- * Saves money. Illumina sequences are much cheaper than PacBio or ONP long reads. So quickmerge allows you to cut your long molecule requirement by half (or more) by replacing the same with Illumina short reads. E.g. if you think you would get a N50 of 8Mb from 75X PacBio reads, try sequencing 40X PacBio and 70X Illumina reads instead of 75X PacBio reads. You may not need that extra 30X PacBio reads.
+ * Saves money. Illumina sequences are much cheaper than PacBio or ONP long reads. So quickmerge allows you to cut your long molecule requirement by half (or more) by replacing the same with Illumina short reads. E.g. if you think you would get a N50 of 8Mb from 75X PacBio reads, try sequencing 40X PacBio and 70X Illumina reads instead of 75X PacBio reads. You may not need that extra 35X PacBio reads.
  * It superfast. Takes less than a minute to run on most genomes. You run nucmer once (nucmer is the most time consuming step) and then you can run quickmerge over a large number of parameters in a very short time.
  * Requires only fasta files and does not depend on any special data or computational resources.
  
@@ -91,4 +91,10 @@ The package contains all necessary components to run quickmerge. We also provide
   * Check the merged assembly by aligning the hybrid and/or PB only assembly to the merged assembly (you can use nucmer -mumreference and mummerplot for alignment and dot plot visualization).
 
 
-U
+5. UPDATES
+  i) If you use illumina sequences to improve contiguity of your assembly, and used <a href="https://sites.google.com/site/dbg2olc/">DBG2OLC</a> (recommended) to generate the hybrid assembly, you no longer have to run the time consuming consensus calling step for DBG2OLC. Instead, obtain the backbone_raw.fasta file after running DBG2OLC and use that as your input for quickmerge. If you decide to go this route, please run nucmer as 
+  '''
+  nucmer -prefix hyb2pb pb.fasta backbone_raw.fasta
+  delta-filter -r -q hyb2pb.delta > hyb2pb.rq.delta
+  '''
+  then run quickmerge as mentioned above.
