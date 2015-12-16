@@ -93,9 +93,9 @@ The package contains all necessary components to run quickmerge. We also provide
 
 5. UPDATES
 
-  i) If you use illumina sequences to improve contiguity of your assembly, and used <a href="https://sites.google.com/site/dbg2olc/">DBG2OLC</a> (recommended) to generate the hybrid assembly, you no longer have to run the time consuming consensus calling step for DBG2OLC. Instead, obtain the backbone_raw.fasta file after running DBG2OLC and use that as your input for quickmerge. If you decide to go this route, please run nucmer as 
+  i) (Experimental) If you use illumina sequences to improve contiguity of your assembly, and used <a href="https://sites.google.com/site/dbg2olc/">DBG2OLC</a> (recommended) to generate the hybrid assembly, you can skip the time consuming consensus calling step of DBG2OLC. Instead, obtain the backbone_raw.fasta file after running DBG2OLC and use that as your input for quickmerge. If you decide to go this route, please run nucmer as 
   ```
   	nucmer -prefix hyb2pb pb.fasta backbone_raw.fasta
   	delta-filter -r -q hyb2pb.delta > hyb2pb.rq.delta
   ```
-  then run quickmerge as mentioned above.
+  then run quickmerge as mentioned above. If it fails, then you will have to generate consensus and use that as quickmerge input.
