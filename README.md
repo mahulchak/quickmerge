@@ -5,7 +5,7 @@ quickmerge uses a simple concept to improve contiguity of genome assemblies base
 
 Why use quickmerge?
 
- * Saves money. Illumina sequences are much cheaper than PacBio or ONP long reads. So quickmerge allows you to cut your long molecule requirement by half (or more) by replacing the same with Illumina short reads. E.g. if you think you would get a N50 of 8Mb from 75X PacBio reads, try sequencing 40X PacBio and 70X Illumina reads instead of 75X PacBio reads. You may not need that extra 35X PacBio reads.
+ * Saves money. Illumina sequences are much cheaper than PacBio or ONP long reads. So quickmerge allows you to cut your long molecule requirement by as much as half by replacing the same with Illumina short reads. E.g. if you think you would get a N50 of 8Mb from 75X PacBio reads, try sequencing 45X PacBio and 70X Illumina reads instead of 75X PacBio reads. You may not need that extra 35X PacBio reads.
  * It is fast. Takes less than a minute to run on most genomes. You run nucmer once (nucmer is the most time consuming step) and then you can run quickmerge over a large number of parameters in a very short time.
  * Requires only fasta files and does not depend on any special data or computational resources.
  
@@ -82,7 +82,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
   * If using a self-assembly as the reference did not improve your contiguity much (unlikely for low coverage PacBio sequence but possible for high coverage PacBio sequences), use the hybrid assembly as your reference and the self-assembly as your query.
 
-  * The fasta sequence headers should not have white spaces in them. In case they do, as might happen for assemblies obtained from  <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a> assembler, the white space needs to be removed before launcing the merging python script or before running mummer. Also, there cannot be any line breaks in the fasta sequence. We are currently in the process of adding additional tools to our merging pipeline which will take care of these format issues.  
+  * The fasta sequence headers should not have white spaces in them. In case they do, as might happen for assemblies obtained from  <a href="https://github.com/PacificBiosciences/FALCON-integrate">FALCON</a> assembler, the white space needs to be removed before launching the merging python script or before running mummer. Also, there cannot be any line breaks in the fasta sequence. We are currently in the process of adding additional tools to our merging pipeline which will take care of these format issues.  
 
   * You can run Ka-kit's <a href="https://github.com/kakitone/finishingTool">finisherSC</a> after running quickmerge to improve the contiguity even further.
 
