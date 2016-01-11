@@ -321,7 +321,7 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 				Dist = abs((q_f - q_last)) + merge.nOvlStore[tempname]; 
 				ovrhangQ = merge.q_len[tempname] - Dist; // this would be zero for innie (overhangRef = merge.ref_len[tempname] - Dist) 
 				ovrhangR = merge.ref_len[tempname] - Dist;
-				if(ovrhangQ == -1) //this is to fix edge cases when alignment edges coincides with sequence ends
+				if(ovrhangQ == -1) //this is to fix edge cases when alignment edges coincide with sequence ends
                                      {
                                              ovrhangQ = 0 ;
                                      }
@@ -477,18 +477,35 @@ vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>&
 {
 unsigned int i =0;
 vector<string> v1;
-
+string storeRef,storeQ;
+char C;
         while(i<temp_rname.size())
         {
                	if(temp_rname[i] == tempname)
         	{
-			if (find(merge.q_name.begin(),merge.q_name.end(),tempname) != merge.q_name.end())
+			if (find(merge.q_name.begin(),merge.q_name.end(),tempname) != merge.q_name.end()) //if tempname is a query
 			{
 				discAnchor(tempname,merge,guruRef,propCutoff);
 			}
-                	 v1.push_back(temp_qname[i]);//may be add the condition that only overlaps above a certain point makes it into the list
-			temp_qname[i]="";
+
+                	v1.push_back(temp_qname[i]);//may be add the condition that only overlaps above a certain point makes it into the list
+			
+			storeRef = temp_rname[i]; //storing them before erasing, in case I have to restore them
+			storeQ = temp_qname[i];
 			temp_rname[i] = ""; //akin to erasing the element. actual erasing is more time consuming.
+			temp_qname[i] = "";
+			if(merge.cAnchor.find(storeRef) != merge.cAnchor.end()) //if the reference is a contig anchor
+			{
+				C = 'Y';
+			}
+			if((find(temp_rname.begin(),temp_rname.end(),storeRef) == temp_rname.end())&& (merge.innie[storeRef+storeQ] ==1) && (C == 'Y')) // if the ref occurs only once and query is an innie, C means whether it is the anchor contig  
+			{
+				if(find(temp_qname.begin(), temp_qname.end(),storeQ) != temp_qname.end()) // if query occurs more than once
+				{
+					temp_qname[i] = storeQ;
+					temp_rname[i] = storeRef;
+				}
+			} 
 		}
         i++;
 	}
@@ -580,6 +597,7 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 			{
 				size = merge.ovrHangQ[str];
 			}
+		
 		}
 		if(RorQ == 'R') //if looking for reference overhang length
 		{
@@ -657,7 +675,6 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		guruR = tempname;
 		seqs = vfind(tempname,temp_rname,temp_qname,merge,guruR,propCutoff);
 		fillToRemove(merge,seqs);
-		
 		lQseq = longestLeft(tempname,seqs,merge,'Q','N',prevElem);
 		rQseq = longestRt(tempname,seqs,merge,'Q','N',prevElem);
 		if((lQseq == "") && (rQseq == "")) //for those which are innie
@@ -1374,7 +1391,7 @@ int returnIndex (vector<string> & myvector, string & str)
 return find;
 }
 ////////////////////////////////////////////////////////////
-void sideCheckerQ(asmMerge & merge)  //checks whether the midpoint of query and not alignment is on the right or left side of the Query
+void sideCheckerQ(asmMerge & merge)  //checks whether the midpoint of alignment is on the right or left side of the query 
 {
 string tempname;
 int qMid;
@@ -1459,7 +1476,7 @@ void discAnchor(string & guruQ, asmMerge & merge, string & guruRef,double propCu
 			cutoff = merge.ovlStore[temp]/merge.nOvlStore[temp];
 		}
 
-		if((merge.ovlStore[temp]>0) && (guruRef != pastTemp) && (cutoff>propCutoff))
+		if((merge.ovlStore[temp]>0) && (guruRef != pastTemp) && (cutoff>propCutoff) && (guruRef != it->first))
 		{
 			merge.cAnchor[it->first].clear();
 		}

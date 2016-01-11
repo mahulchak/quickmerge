@@ -82,6 +82,7 @@ int main(int argc, char * argv[])
 	innieChecker(merge);
 	sideChecker(merge);
 	sideCheckerQ(merge);
+	assignStrand(merge);
 	ovlStoreCalculator(merge);
 	nOvlStoreCalculator(merge);
 	ovrHngCal(merge);
