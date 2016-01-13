@@ -1325,7 +1325,7 @@ r2_end = merge.ref_end[tempname2][merge.ref_end[tempname2].size()-1];
 		}
 		if((q1_f<q2_end) && (q1_f > q2_f)) // q1_f is inside		
 		{
-			cord = r2_end - (q2_end - q1_f);
+			cord = r2_f + abs(q2_f - q1_f); //EDIT:01-12-2016 cord = r2_end - (q2_end - q1_f);
 		}
 	}
 
