@@ -203,25 +203,25 @@ int q_last,noLovl,noRovl;
 				noRovl = merge.q_len[tempname] - q_last;
 				
 			}
-			if(((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_st[tempname][0]-1)>(merge.ref_st[tempname][0]-1)))   // if right side of the query is hanging but left side is not
+			else if(((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_st[tempname][0]-1)>(merge.ref_st[tempname][0]-1)))   // if right side of the query is hanging but left side is not
 			{
 				noRovl = merge.ref_len[tempname] - ref_last;
 				noLovl = merge.q_st[tempname][0];
 				
 			}
-			if(merge.innie[tempname] == 1)
+			else if(merge.innie[tempname] == 1)
 			{
 				noLovl = merge.q_st[tempname][0];
 				noRovl = merge.q_len[tempname] - q_last;
 			}
-			if(((merge.q_st[tempname][0]-1)>(merge.ref_st[tempname][0]-1)) && ((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last))) // if both sides of the query are hanging
+			else// if(((merge.q_st[tempname][0]-1)>(merge.ref_st[tempname][0]-1)) && ((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last))) // if both sides of the query are hanging
 			{
 				noLovl = merge.ref_st[tempname][0];
 				noRovl = merge.ref_len[tempname] - ref_last ; 
 			}
 		}
-
-		if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) // if the query is reverse oriented and reference is forward oriented
+		else
+		//if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) // if the query is reverse oriented and reference is forward oriented
 		{
 			if(((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1)) && !((q_last -1) > (merge.ref_len[tempname] - ref_last)))// if query has a left overhang but no left overhang
 			{
@@ -229,18 +229,18 @@ int q_last,noLovl,noRovl;
 				noRovl = q_last -1 ;
 				
 			}
-			if(((q_last -1) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1))) // if query has a right overhang but no right overhang
+			else if(((q_last -1) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1))) // if query has a right overhang but no right overhang
 			{ 
 				noRovl = merge.ref_len[tempname] - ref_last;
 				noLovl = merge.q_len[tempname] - merge.q_st[tempname][0];
 				
 			}
-			if(merge.innie[tempname] == 1)
+			else if(merge.innie[tempname] == 1)
 			{
 				noLovl = merge.q_len[tempname] - merge.q_st[tempname][0];
 				noRovl = q_last-1;
 			}
-			if(((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1)) && ((q_last -1) > (merge.ref_len[tempname] - ref_last))) // if query has both right and left overhangs
+			else //if(((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1)) && ((q_last -1) > (merge.ref_len[tempname] - ref_last))) // if query has both right and left overhangs
 			{
 				noLovl = merge.ref_st[tempname][0];
 				noRovl = merge.ref_len[tempname] - ref_last;
@@ -986,7 +986,8 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 {
 	string name,subseq,subseqR,indexL1,indexL2,seqHolder;
 	vector<int> v1;
-	int q1_f,q1_last,q2_f,q2_last,r1_f,r1_last,r2_f,r2_last,tempRef_st,cheatF,cheatR;
+	//entry by michel
+	// tempRef_st initalized and moved at second for-loop
 	int begin_insrt = 1;
 	for(map<string,vector<string> >::iterator it = merge1.lseq.begin(); it!=merge1.lseq.end();it++) // merge1.lseq is container for the contig names
 	{
@@ -995,14 +996,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 		
 		for(unsigned int i=0;i<merge1.lseq[name].size();i++)
 		{
-			q1_f = 0;			
-			q1_last = 0;
-			q2_f = 0;
-			q2_last = 0;
-			r1_last =0;
-			r1_f = 0;
-			r2_f = 0;
-			r2_last = 0;
+			int q1_f = 0,q1_last = 0,q2_f = 0,q2_last = 0,r1_f = 0,r1_last = 0,r2_f = 0,r2_last = 0,tempRef_st = 0;
 			if( i ==0 && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end()))//if first element is query
 			{
 				indexL2 = merge1.rseq[name][i]; // index name coresponding to the query element
@@ -1076,8 +1070,8 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 0) //alignments are non-overlapping
 					{
 						v1 = minD(q1_f,q1_last,q2_f,q2_last);
-						cheatF = min(v1[0],v1[1]);
-						cheatR = max(v1[0],v1[1]);
+						int cheatF = min(v1[0],v1[1]);
+						int cheatR = max(v1[0],v1[1]);
 						subseq = hybrid.seq[merge1.lseq[name][i]].substr(cheatF,(cheatR-cheatF));
 					}
 					if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 1) // if alignments are overlapping
@@ -1166,8 +1160,9 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						begin_insrt = -1;
 					}
 				}
-				if(i == (merge1.lseq[name].size()-1))
-				{
+				//if(i == (merge1.lseq[name].size()-1))
+				else
+				{	
 					if((merge.Ori[name][i] == -1) && (name == merge1.lseq[name][i]))
 					{
 						begin_insrt = -1;
@@ -1176,8 +1171,9 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					{
 						r1_f = tempRef_st; //transfer the number so that it is used in case of an overlap;
 						tempRef_st = 0; //reset tempRef
-					}	
-					subseq = pbOnly.seq[merge1.lseq[name][i]].substr(r1_f,(merge.ref_len[indexL1] - r1_f));
+					}
+					const std::string& s = pbOnly.seq[merge1.lseq[name][i]];
+					subseq = s.substr(r1_f,(merge.ref_len[indexL1] - r1_f));  // error here
 				}
 				if(merge.Ori[name][i] == -1)
 				{
@@ -1462,7 +1458,6 @@ void assignStrand(asmMerge & merge)
 void discAnchor(string & guruQ, asmMerge & merge, string & guruRef,double propCutoff) //discard anchor contig that is partner of a query contig being used for chaining
 {
 	string temp,pastTemp;
-	double cutoff;
 	int count =0;
 	for(map<string,vector<string> >::iterator it = merge.cAnchor.begin(); it!= merge.cAnchor.end(); it++)
 	{
@@ -1473,14 +1468,12 @@ void discAnchor(string & guruQ, asmMerge & merge, string & guruRef,double propCu
 		
 		if(merge.nOvlStore[temp] >0)
 		{
-			cutoff = merge.ovlStore[temp]/merge.nOvlStore[temp];
+			double cutoff = merge.ovlStore[temp]/merge.nOvlStore[temp];
+			if((guruRef != pastTemp) && (cutoff>propCutoff) && (guruRef != it->first))
+			{
+				merge.cAnchor[it->first].clear();
+			}
 		}
-
-		if((merge.ovlStore[temp]>0) && (guruRef != pastTemp) && (cutoff>propCutoff) && (guruRef != it->first))
-		{
-			merge.cAnchor[it->first].clear();
-		}
-	
 	}
 }
 		

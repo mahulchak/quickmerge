@@ -1,3 +1,3 @@
 quickmerge: quickmerge.cpp qmergelib.cpp qmerge.h
-	g++ -Wall -o quickmerge quickmerge.cpp qmergelib.cpp -I.
+	g++ -O3 -Wall -o quickmerge quickmerge.cpp qmergelib.cpp -I.
 
