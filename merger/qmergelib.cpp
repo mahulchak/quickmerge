@@ -993,10 +993,10 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 	{
 		name = it->first;
 		begin_insrt = 1;
-		
+		tempRef_st = 0;
 		for(unsigned int i=0;i<merge1.lseq[name].size();i++)
 		{
-			int q1_f = 0,q1_last = 0,q2_f = 0,q2_last = 0,r1_f = 0,r1_last = 0,r2_f = 0,r2_last = 0,tempRef_st = 0;
+			int q1_f = 0,q1_last = 0,q2_f = 0,q2_last = 0,r1_f = 0,r1_last = 0,r2_f = 0,r2_last = 0;
 			if( i ==0 && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end()))//if first element is query
 			{
 				indexL2 = merge1.rseq[name][i]; // index name coresponding to the query element
