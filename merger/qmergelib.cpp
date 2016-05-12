@@ -986,8 +986,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 {
 	string name,subseq,subseqR,indexL1,indexL2,seqHolder;
 	vector<int> v1;
-	//entry by michel
-	// tempRef_st initalized and moved at second for-loop
+	int q1_f,q1_last,q2_f,q2_last,r1_f,r1_last,r2_f,r2_last,tempRef_st,cheatF,cheatR;
 	int begin_insrt = 1;
 	for(map<string,vector<string> >::iterator it = merge1.lseq.begin(); it!=merge1.lseq.end();it++) // merge1.lseq is container for the contig names
 	{
@@ -996,7 +995,14 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 		tempRef_st = 0;
 		for(unsigned int i=0;i<merge1.lseq[name].size();i++)
 		{
-			int q1_f = 0,q1_last = 0,q2_f = 0,q2_last = 0,r1_f = 0,r1_last = 0,r2_f = 0,r2_last = 0;
+			q1_f = 0;
+                        q1_last = 0;
+                        q2_f = 0;
+                        q2_last = 0;
+                        r1_last =0;
+                        r1_f = 0;
+                        r2_f = 0;
+                        r2_last = 0;
 			if( i ==0 && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end()))//if first element is query
 			{
 				indexL2 = merge1.rseq[name][i]; // index name coresponding to the query element
