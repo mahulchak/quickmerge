@@ -1,6 +1,5 @@
 # quickmerge
 
-##fork of quickmerge from Mahul Chakraborty
 
 What is quickmerge?
 
