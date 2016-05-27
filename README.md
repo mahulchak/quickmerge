@@ -50,7 +50,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
    The simplest way to run 'merger' is to use the python wrapper 'merge_wrapper_v2.py':
    ```
-	merge_wrapper_v2.py hybrid_assembly.fasta self_assembly.fasta
+	merge_wrapper.py hybrid_assembly.fasta self_assembly.fasta
    ```
    try the command 'merge_wrapper_v2.py -h' for detail on options available with this wrapper.
 
