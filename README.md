@@ -92,8 +92,11 @@ The package contains all necessary components to run quickmerge. We also provide
 
   * Check the merged assembly by aligning the hybrid and/or PacBio only assembly to the merged assembly (you can use nucmer -mumreference and mummerplot for alignment and dot plot visualization).
 
+5. KNOWN ISSUES:
 
-5. UPDATES
+ * All sequence names (that is, fasta headers) in each of the two input assemblies must be unique, i.e., each assembly must have all unique names, and the two assemblies must not share any names.  We are working on modifying the quickmerge wrapper to automatically fix this in the future.
+
+6. UPDATES
 
   i) (Experimental) If you use illumina sequences to improve contiguity of your assembly, and used <a href="https://sites.google.com/site/dbg2olc/">DBG2OLC</a> (recommended) to generate the hybrid assembly, you can skip the time consuming consensus calling step of DBG2OLC. Instead, obtain the backbone_raw.fasta file after running DBG2OLC and use that as your input for quickmerge. If you decide to go this route, please run nucmer as 
   ```
