@@ -451,6 +451,7 @@ void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double pr
 			merge.anchor[tempname].push_back(merge.q_name[i]);
 			fillToRemove(merge,merge.q_name[i]);//here add only those for which query is an innie
 		}
+		//if((prop > propCutoff) && (merge.ref_len[tempname] > absLenCutoff)) 
 		if((prop > propCutoff) && (merge.ovlStore[tempname]>absLenCutoff))
 		{
 			merge1.r_name.push_back(merge.r_name[i]); //populating the new asmMerge names vector

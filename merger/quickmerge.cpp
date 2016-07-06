@@ -15,9 +15,11 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
-        if(argc==1)
-        {cerr<<"Usage: "<<argv[0]<<" -d delta_file.out -q hybrid.fasta -r self.fasta -hco (default=5.0) -c (default=1.5) -l length_cutoff "<<endl;
-        exit(EXIT_FAILURE);
+        if((argc<14) || (argc==1))
+        {
+		cerr<<"All options were not supplied :("<<endl;
+		cerr<<"Usage: "<<argv[0]<<" -d delta_file.out -q hybrid.fasta -r self.fasta -hco (default=5.0) -c (default=1.5) -l seed_length_cutoff -ml merging_length_cutoff "<<endl;
+       		exit(EXIT_FAILURE);
         }
 
 	ifstream fin,hyb,pb;
@@ -37,6 +39,7 @@ int main(int argc, char * argv[])
 	int r_st = 0;
 	int r_end = 0;
 	const int length = atoi(argv[12]);
+	int const absLenCutoff = atoi(argv[14]);
 
 	if(*argv[8])
 	{
@@ -81,6 +84,7 @@ int main(int argc, char * argv[])
 	writeToFile(merge);
 	innieChecker(merge);
 	sideChecker(merge);
+	sideCheckerR(merge);
 	sideCheckerQ(merge);
 	assignStrand(merge);
 	ovlStoreCalculator(merge);
@@ -98,7 +102,7 @@ int main(int argc, char * argv[])
 	}
 	fillSeq(hybrid,hyb,' ');
 	fillSeq(pbOnly,pb);
-	fillAnchor(merge,merge1,hco,cutoff,length);
+	fillAnchor(merge,merge1,hco,cutoff,length,absLenCutoff);
 	writeAnchorSummary(merge);
 
 

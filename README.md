@@ -78,6 +78,8 @@ The package contains all necessary components to run quickmerge. We also provide
    For both "hco" and "c", bigger the number, more stringent is the criteria for contig selection (which will lead to fewer contigs being merged). If they are too small (<1), chances of spurious merging will increase.
 
    -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the 'self_assembly.fasta'. E.g. if the N50 of your self_assembly.fasta is 2Mb. Then use 2000000 as your cutoff. Lowering this value will lead to more merging but may increase the probability of mis-joins. 
+ 
+  -ml: controls the minimum alignment length cutoff for an overlap to be considered for merging. This is particularly useful if you have a highly repetitive genome. 5000 is a good starting point. Default is 0.
 
 4. SOME HELPFUL TIPS:
 
