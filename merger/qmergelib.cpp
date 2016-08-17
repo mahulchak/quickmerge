@@ -311,27 +311,49 @@ string revCom(string & str)
 {
 string revcom;
 unsigned int k = str.size();
-	for(int i=k-1; i>-1;--i)
-	{
-		if(str[i] == 'A')
-		{
-		revcom.push_back('T');
-		}
-		if(str[i] == 'T')
-		{
-		revcom.push_back('A');
-		}
-		if(str[i] == 'G')
-		{
-		revcom.push_back('C');
-		}
-		if(str[i] == 'C')
-		{
-		revcom.push_back('G');
-		}
-	}
+        for(int i=k-1; i>-1;--i)
+        {
+                if(str[i] == 'A')
+                {
+                revcom.push_back('T');
+                }
+                if(str[i] == 'T')
+                {
+                revcom.push_back('A');
+                }
+                if(str[i] == 'G')
+                {
+                revcom.push_back('C');
+                }
+                if(str[i] == 'C')
+                {
+                revcom.push_back('G');
+                }
+                if(str[i] == 'N')
+                {
+                revcom.push_back('N');
+                }
+                if(str[i] == 'a')
+                {
+                revcom.push_back('T');
+                }
+                if(str[i] == 't')
+                {
+                revcom.push_back('A');
+                }
+                if(str[i] == 'g')
+                {
+                revcom.push_back('C');
+                }
+                if(str[i] == 'c')
+                {
+                revcom.push_back('G');
+                }
+
+        }
 return revcom;
 }
+
 ///////////////////////////////////////////////////////////////////////
 void ovrHngCal(asmMerge & merge)
 {
