@@ -54,7 +54,7 @@ def test_for_namedups(connection1,connection2):
     for line in connection1:
         if line[0] == ">":
             line = line.rstrip('\n')
-            name = line[1:]
+            name = "_".join(line[1:].split(" "))
             if not name in names:
                 names.add(name)
             else:
@@ -63,7 +63,7 @@ def test_for_namedups(connection1,connection2):
     for line in connection2:
         if line[0] == ">":
             line = line.rstrip('\n')
-            name = line[1:]
+            name = line[1:].join(line[1:].split(" "))
             if not name in names:
                 names.add(name)
             else:
@@ -93,7 +93,7 @@ ok2 = a[1]
 names = a[2]
 badnames = a[3]
 
-#check for fasta line compatibility:
+#check for fasta line compatibility and uppercase compatibility:
 for iteration in range(0,2):
     file = testpaths[iteration]
     with open(file,"r") as tfile:
@@ -103,6 +103,7 @@ for iteration in range(0,2):
             line = linea.rstrip('\n')
             if i % 2 == 0 and line[0] != ">": ok = False
             if " " in line: ok = False
+            if line[0] != ">" and not line.isupper(): ok = False
             i += 1
 
 
@@ -124,11 +125,11 @@ for iteration in range(0,2):
                                 header_out = ">" + str(fix_namedup(header[1:]))
                             else:
                                 header_out = header
-                            tout.write(header_out + "\n" + seq + "\n")
+                            tout.write(header_out + "\n" + seq.upper() + "\n")
                         if not " " in line:
                             header = line
                         else:
-                            header = line.split(" ")[0]
+                            header = "_".join(map(str,line.split(" ")))
                         seq = ""
                     else:
                         seq = seq + line
@@ -136,7 +137,7 @@ for iteration in range(0,2):
                     header_out = ">" + str(fix_namedup(header[1:]))
                 else:
                     header_out = header
-                tout.write(header + "\n" + seq + "\n")
+                tout.write(header_out + "\n" + seq.upper() + "\n")
             #change hypath and selfpath to use the temporary (oneline) fastas:
             if iteration == 0:
                 hypath = tempoutpath
