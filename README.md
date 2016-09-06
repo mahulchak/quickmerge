@@ -16,7 +16,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
 1. DOWNLOAD
 
-   To download the latest version of quickmerge and <a href "https://sourceforge.net/projects/mummer/files/">MUMmer</a>, its primary dependency, you can clone the repository using 
+   To download the latest version of quickmerge and <a href "http://mummer.sourceforge.net/">MUMmer</a>, its primary dependency, you can clone the repository using 
    ```
     git clone
    ```
@@ -77,7 +77,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
    -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the 'self_assembly.fasta'. E.g. if the N50 of your self_assembly.fasta is 2Mb. Then use 2000000 as your cutoff. Lowering this value will lead to more merging but may increase the probability of mis-joins.
    
-   -ml: controls the minimum alignment length to be considered for merging. This is especially helpful for repeat-rich genomes. Default is 0 but 5000 is a good starting point.
+   -ml: controls the minimum alignment length to be considered for merging. This is especially helpful for repeat-rich genomes. Default is 0 (20000 if you are using the wrapper) but 20000 is a good starting point.
 
 4. SOME HELPFUL TIPS:
 
