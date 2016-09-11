@@ -42,7 +42,7 @@ else:
 if args.length_minimum:
     length_minimum = args.length_minimum
 else:
-    length_minimum = 20000
+    length_minimum = 0
 
 
 ##define functions:
