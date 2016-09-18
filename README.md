@@ -98,11 +98,3 @@ The package contains all necessary components to run quickmerge. We also provide
 
  * All sequence names (that is, fasta headers) in each of the two input assemblies must be unique, i.e., each assembly must have all unique names, and the two assemblies must not share any names.  The quickmerge python wrapper now automatically fix this.
 
-6. UPDATES
-
-  i) (Experimental) If you use illumina sequences to improve contiguity of your assembly, and used <a href="https://sites.google.com/site/dbg2olc/">DBG2OLC</a> (recommended) to generate the hybrid assembly, you can skip the time consuming consensus calling step of DBG2OLC. Instead, obtain the backbone_raw.fasta file after running DBG2OLC and use that as your input for quickmerge. If you decide to go this route, please run nucmer as 
-  ```
-  	nucmer -prefix hyb2pb pb.fasta backbone_raw.fasta
-  	delta-filter -r -q hyb2pb.delta > hyb2pb.rq.delta
-  ```
-  then run quickmerge as mentioned above. If it fails, then you will have to generate consensus and use that as quickmerge input.
