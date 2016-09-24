@@ -16,7 +16,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
 1. DOWNLOAD
 
-   To download the latest version of quickmerge and <a href "http://mummer.sourceforge.net/">MUMmer</a>, its primary dependency, you can clone the repository using 
+   To download the latest version of quickmerge and <a href = "http://mummer.sourceforge.net/">MUMmer</a>, its primary dependency, you can clone the repository using 
    ```
     git clone
    ```
@@ -49,7 +49,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
    The simplest way to run 'merger' is to use the python wrapper 'merge_wrapper_v2.py':
    ```
-	merge_wrapper.py hybrid_assembly.fasta self_assembly.fasta
+	merge_wrapper.py query_assembly.fasta reference_assembly.fasta
    ```
    try the command 'merge_wrapper_v2.py -h' for detail on options available with this wrapper.
 
@@ -57,7 +57,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
    To manually run 'merger', first make a call to 'nucmer'.  Nucmer aligns the two assemblies so that the merger can find the correct splice sites:
    ```
-	nucmer -l 100 -prefix out  self_assembly.fasta hybrid_assembly.fasta
+	nucmer -l 100 -prefix out  reference_assembly.fasta query_assembly.fasta
    ```
    Then, use delta-filter to filter out alignments due to repeats and duplicates:
    ```   
@@ -65,17 +65,21 @@ The package contains all necessary components to run quickmerge. We also provide
    ```
    Finally, use 'quickmerge' to merge the two assemblies (note: the order of the self and hybrid assembly is important:
    ```
-	quickmerge -d out.rq.delta -q hybrid_assembly.fasta -r self_assembly.fasta -hco 5.0 -c 1.5 -l n -ml m
+	quickmerge -d out.rq.delta -q query_assembly.fasta -r reference_assembly.fasta -hco 5.0 -c 1.5 -l n -ml m
    ```
    Description of the parameters:
-
+   
+   -q: Query assembly. Either hybrid or PacBio only assembly can be the query assembly. see <a href ="https://github.com/mahulchak/quickmerge/wiki">quickmerge wiki</a> for details
+   
+   -r: Reference assembly. Either hybrid or PacBio only assembly.
+   
    -hco: controls the overlap cutoff used in selection of anchor contigs. Default is 5.0. 
 
    -c: controls the overlap cutoff for contigs used for extension of the anchor contig. Default is 1.5.
 
    For both "hco" and "c", bigger the number, more stringent is the criteria for contig selection (which will lead to fewer contigs being merged). If they are too small (<1), chances of spurious merging will increase.
 
-   -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the 'self_assembly.fasta'. E.g. if the N50 of your self_assembly.fasta is 2Mb. Then use 2000000 as your cutoff. Lowering this value will lead to more merging but may increase the probability of mis-joins.
+   -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with 1000000 (1Mb) or bigger number. However, if N50 of your reference assembly is less than 1 Mb then you can use 500000 (500Kb) as your cutoff. Lowering this value may lead to more merging but may increase the probability of mis-joins.
    
    -ml: controls the minimum alignment length to be considered for merging. This is especially helpful for repeat-rich genomes. Default is 0 but higher values (>5000) are recommended.
 
