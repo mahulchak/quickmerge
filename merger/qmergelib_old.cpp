@@ -52,25 +52,37 @@ string tempname;
 	for(unsigned int i =0; i<merge.r_name.size();i++)
 	{
 		tempname = merge.r_name[i]+merge.q_name[i];
-		ref_last = merge.newEnd[tempname][1];
-		q_last = merge.newEnd[tempname][3];
+		ref_last = merge.ref_end[tempname][merge.ref_end[tempname].size() -1];
+		q_last = merge.q_end[tempname][merge.q_end[tempname].size() -1];
 		flag =0; //reset flag 
+	//	if(merge.ref_st[tempname][0]>merge.ref_end[tempname][0]) //if reference is reverse oriented but query is forward oriented
+	//	{
+	//		if((merge.q_st[tempname][0] -1)<(merge.ref_len[tempname] - merge.ref_st[tempname][0]) && (ref_last -1)> (merge.q_len[tempname] - q_last))
+	//		{
+	//			flag = 1;
+	//		}
+	//	}
 
+		//if((merge.ref_st[tempname][0] < merge.ref_end[tempname][0]) && (merge.q_st[tempname][0] < merge.q_end[tempname][0])) //if the query is forward oriented and reference is forward oriented
 		if(merge.newEnd[tempname][2] < merge.newEnd[tempname][3])
 		{ 	
+			//if( ((merge.ref_st[tempname][0] -1) >= (merge.q_st[tempname][0] - 1)) && ((merge.ref_len[tempname] - ref_last)>= (merge.q_len[tempname] - q_last)))  
 			if( ((merge.newEnd[tempname][0] -1) >= (merge.newEnd[tempname][2] - 1)) && ((merge.ref_len[tempname] - ref_last)>= (merge.q_len[tempname] - q_last)))
 			{ 
 				flag = 1;
 			}
 		}
+	//	if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) // if the query is reverse oriented and reference is forward oriented
 		if(merge.newEnd[tempname][2] > merge.newEnd[tempname][3])//^ 
 		{
+		//	if(((merge.q_len[tempname] - merge.q_st[tempname][0]) < (merge.ref_st[tempname][0] -1)) && ((merge.ref_len[tempname]-ref_last)>(q_last - 1)))  
 			if(((merge.q_len[tempname] - merge.newEnd[tempname][2]) < (merge.newEnd[tempname][0] -1)) && ((merge.ref_len[tempname]-merge.newEnd[tempname][1])>(merge.newEnd[tempname][3] - 1)))
 			{									
 				flag = 1;
 			}
 		}
 		merge.innie[tempname] = flag;
+//if(tempname == "Backbone_18/0_1654765 tig00091223"){cout<<"inniecheck"<<"\t"<<merge.innie[tempname]<<endl;}
 	}
 
 }			
@@ -96,7 +108,9 @@ int Dist =0;
         {
                 tempname = merge.r_name[i]+merge.q_name[i];
                 rMid = int(merge.ref_len[tempname] * 0.5);
-               	r_f = merge.newEnd[tempname][0];
+                //r_f = merge.ref_st[tempname][0];
+                r_f = merge.newEnd[tempname][0];
+                //r_last = merge.ref_end[tempname][merge.ref_end[tempname].size() -1];
                 r_last = merge.newEnd[tempname][1];
                 Dist = abs(r_last-r_f); // total alignment length
 
@@ -104,7 +118,8 @@ int Dist =0;
                 if(rAlnMid > rMid)
                 {
                 	merge.sideInfoR[tempname] = 'R';
-	        }
+//if(tempname == "Backbone_4/0_3130932  tig00091211"){cout<<merge.sideInfoR[tempname]<<endl;}
+                }
                 if(rAlnMid < rMid)
                 {
                 	merge.sideInfoR[tempname] = 'L';
@@ -113,6 +128,7 @@ int Dist =0;
                 {
                 	merge.sideInfoR[tempname] = 'L';
                 }
+if(tempname == "Backbone_18/0_1654765 tig00091223"){cout<<rMid<<"\t"<<rAlnMid<<"\t"<<merge.sideInfoR[tempname]<<endl;}                
         }
 
 }
@@ -128,10 +144,13 @@ int qMidonR;
 		tempname = merge.r_name[i]+merge.q_name[i];
 		rMid = merge.ref_len[tempname] * 0.5;
 		qMid = merge.q_len[tempname] * 0.5;
+		//if(merge.q_st[tempname][0] < merge.q_end[tempname][0]) // query is forward oriented
 		if(merge.newEnd[tempname][2] < merge.newEnd[tempname][3])
 		{
+			//if(merge.q_st[tempname][0] > qMid) // q_st is on the right of query midpoint
 			if(merge.newEnd[tempname][2] > qMid)
 			{	
+				//qMidonR = merge.ref_st[tempname][0] - (merge.q_st[tempname][0] -qMid);
 				qMidonR = merge.newEnd[tempname][0] - (merge.newEnd[tempname][2] -qMid);
 				if(qMidonR > rMid)
 				{
@@ -142,8 +161,10 @@ int qMidonR;
 					merge.sideInfo[tempname] = 'L';
 				}
 			}
+			//if(merge.q_st[tempname][0] < qMid) 
 			if(merge.newEnd[tempname][2] < qMid)
 			{
+				//qMidonR = merge.ref_st[tempname][0] + (qMid - merge.q_st[tempname][0]);
 				qMidonR = merge.newEnd[tempname][0] + (qMid - merge.newEnd[tempname][2]);
 				if(qMidonR > rMid)
 				{
@@ -155,10 +176,13 @@ int qMidonR;
 				}
 			}
 		}
+		//if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) 
 		if(merge.newEnd[tempname][2] > merge.newEnd[tempname][3])
 		{
+			//if(qMid < merge.q_st[tempname][0])
 			if(qMid < merge.newEnd[tempname][2])
 			{
+				//qMidonR = merge.ref_st[tempname][0] + (merge.q_st[tempname][0] - qMid);
 				qMidonR = merge.newEnd[tempname][0] + (merge.newEnd[tempname][2] - qMid);
 				if(qMidonR > rMid)
 				{
@@ -169,8 +193,10 @@ int qMidonR;
 					merge.sideInfo[tempname] = 'L';
 				}
 			}
+			//if(qMid > merge.q_st[tempname][0])
 			if(qMid > merge.newEnd[tempname][2])
 			{
+				//qMidonR = merge.ref_st[tempname][0] - (qMid - merge.q_st[tempname][0]);
 				qMidonR = merge.newEnd[tempname][0] - (qMid - merge.newEnd[tempname][2]);
 				if(qMidonR > rMid)
 				{
@@ -213,13 +239,12 @@ void ovlStoreCalculator(asmMerge & merge)
 void lisCalculator(asmMerge & merge,string & tempname,vector<int>& ref_st,vector<int>& ref_end,vector<int>& q_st, vector<int>& q_end)
 {
 int ovl = 0;
-long int storedQend = 0,storedRefEnd = 0,storedRefSt = 0, storedQst = 0;
+long int storedQend = 0,storedRefEnd = 0;
 vector<int> v;
 map<int,int> ovl2refSt;
 map<int,int> ovl2qSt;
 map<int,int> ovl2refEnd;
 map<int,int> ovl2qEnd;
-
 	if(q_st.size() >1)
 	{
 	        for(unsigned int j =0;j<q_st.size();j++)
@@ -230,46 +255,36 @@ map<int,int> ovl2qEnd;
 				storedRefEnd = 0;
 				for(unsigned k = j;k<q_st.size();k++)
 				{
-					//if((q_st[k] > (storedQend - 500)) && (abs(q_st[k]-storedQend)<merge.q_len[tempname]) && (ref_st[k] > (storedRefEnd - 500))) //500bp overlap allowed
-					if((q_st[k] > storedQst) && (abs(q_st[k]-storedQst)<merge.q_len[tempname]) && (ref_st[k] > storedRefSt))
+					if((q_st[k] > (storedQend - 500)) && (abs(q_st[k]-storedQend)<merge.q_len[tempname]) && (ref_st[k] > (storedRefEnd - 500))) //500bp overlap allowed
 					{
 						ovl = ovl + abs(q_st[k] - q_end[k]);
-						storedQend = q_end[k]; //confused? will change this later
-						storedQst = q_st[k];
+						storedQend = q_end[k];
 						storedRefEnd = ref_end[k];
-						storedRefSt = ref_st[k];
 					}
 				}
 			}
 			if(q_st[j]>q_end[j]) //if this MUM is reverse oriented
 			{
 				storedQend = 100000000000;
-				storedQst = 100000000000;
 				storedRefEnd = 0;
 				for(unsigned k = j;k<q_st.size();k++)
 				{
 					if(j == k)
 					{
-						//if((q_st[k] < (storedQend+500)) && (ref_st[k] > storedRefEnd))
-						if((q_st[k] < storedQst) && (ref_st[k] > storedRefSt))
+						if((q_st[k] < (storedQend+500)) && (ref_st[k] > storedRefEnd))
 					 	{
 							ovl = ovl + abs(q_st[k] - q_end[k]);
 							storedQend = q_end[k];
-							storedQst = q_st[k];
 							storedRefEnd = ref_end[k];
-							storedRefSt = ref_st[k];
 						}
 					}
 					if(k>j)
 					{
-						//if((q_st[k] < (storedQend+500)) && (abs(q_st[k]-storedQend)<merge.q_len[tempname]) && (ref_st[k] > (storedRefEnd -500)))
-						if((q_st[k] < storedQst) && (abs(q_st[k]-storedQst)<merge.q_len[tempname]) && (ref_st[k] > storedRefSt))
+						if((q_st[k] < (storedQend+500)) && (abs(q_st[k]-storedQend)<merge.q_len[tempname]) && (ref_st[k] > (storedRefEnd -500)))
 						{
 							ovl = ovl + abs(q_st[k] - q_end[k]);
                                                         storedQend = q_end[k];
-							storedQst = q_st[k];
 							storedRefEnd = ref_end[k];
-							storedRefSt = ref_st[k];
 						}
 					}
 				}
@@ -298,6 +313,7 @@ map<int,int> ovl2qEnd;
 	merge.newEnd[tempname].push_back(ovl2refEnd[ovl]);
 	merge.newEnd[tempname].push_back(ovl2qSt[ovl]);
 	merge.newEnd[tempname].push_back(ovl2qEnd[ovl]);
+//cout<<tempname<<"\t"<<ovl2refSt[ovl]<<"\t"<<ovl2refEnd[ovl]<<"\t"<<ovl2qSt[ovl]<<"\t"<<ovl2qEnd[ovl]<<endl;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void nOvlStoreCalculator(asmMerge & merge)
@@ -308,59 +324,75 @@ int q_last,noLovl,noRovl;
 	for(unsigned int i=0; i<merge.r_name.size();i++)
 	{
 		tempname = merge.r_name[i] + merge.q_name[i];
+		//q_last = merge.q_end[tempname][merge.q_end[tempname].size() - 1]; // q_last is the last query coordinate that aligned with the reference
 		q_last = merge.newEnd[tempname][3];
+		//ref_last = merge.ref_end[tempname][merge.ref_end[tempname].size() -1]; 
 		ref_last = merge.newEnd[tempname][1];
 		
+		//if(merge.q_st[tempname][0] < merge.q_end[tempname][0]) //if the query is forward oriented
 		if(merge.newEnd[tempname][2] < merge.newEnd[tempname][3])
 		{
-			if(((merge.newEnd[tempname][2]-1)>(merge.newEnd[tempname][0]-1)) && !((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)))// if left side of the query end is hanging but right side not
+		//	if(((merge.q_st[tempname][0]-1)>(merge.ref_st[tempname][0]-1)) && !((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last))) // if left side of the query end is hanging but right side not
+			if(((merge.newEnd[tempname][2]-1)>(merge.newEnd[tempname][0]-1)) && !((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)))
  			{
+				//noLovl = merge.ref_st[tempname][0];
 				noLovl = merge.newEnd[tempname][0];
 				noRovl = merge.q_len[tempname] - q_last;
 				
 			}
-			if(((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)) && !((merge.newEnd[tempname][2]-1)>(merge.newEnd[tempname][0]-1)))// if right side of the query is hanging but left side is not
+			//if(((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_st[tempname][0]-1)>(merge.ref_st[tempname][0]-1)))   // if right side of the query is hanging but left side is not
+			if(((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)) && !((merge.newEnd[tempname][2]-1)>(merge.newEnd[tempname][0]-1)))
 			{
 				noRovl = merge.ref_len[tempname] - ref_last;
+				//noLovl = merge.q_st[tempname][0];
 				noLovl = merge.newEnd[tempname][2];
 				
 			}
 			if(merge.innie[tempname] == 1)
 			{
+				//noLovl = merge.q_st[tempname][0];
 				noLovl = merge.newEnd[tempname][2];
 				noRovl = merge.q_len[tempname] - q_last;
 			}
+			//if(((merge.q_st[tempname][0]-1)>(merge.ref_st[tempname][0]-1)) && ((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last))) // if both sides of the query are hanging
 			if(((merge.newEnd[tempname][2]-1)>(merge.newEnd[tempname][0]-1)) && ((merge.q_len[tempname]-q_last) > (merge.ref_len[tempname] - ref_last)))
 			{
+				//noLovl = merge.ref_st[tempname][0];
 				noLovl = merge.newEnd[tempname][0];
 				noRovl = merge.ref_len[tempname] - ref_last ; 
 			}
 		}
 
+		//if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) // if the query is reverse oriented and reference is forward oriented
 		if(merge.newEnd[tempname][2] > merge.newEnd[tempname][3])
 		{
-		
+		//	if(((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1)) && !((q_last -1) > (merge.ref_len[tempname] - ref_last)))// if query has a left overhang but no left overhang
 			if(((merge.q_len[tempname] - merge.newEnd[tempname][2]) > (merge.newEnd[tempname][0] - 1)) && !((q_last -1) > (merge.ref_len[tempname] - ref_last)))
 			{
+				//noLovl = merge.ref_st[tempname][0];
 				noLovl = merge.newEnd[tempname][0];
 				noRovl = q_last -1 ;
 				
 			}
-			
+			//if(((q_last -1) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1))) // if query has a right overhang but no right overhang
 			if(((q_last -1) > (merge.ref_len[tempname] - ref_last)) && !((merge.q_len[tempname] - merge.newEnd[tempname][2]) > (merge.newEnd[tempname][0] - 1)))
 			{ 
 				noRovl = merge.ref_len[tempname] - ref_last;
+				//noLovl = merge.q_len[tempname] - merge.q_st[tempname][0];
 				noLovl = merge.q_len[tempname] - merge.newEnd[tempname][2];
 				
 			}
 			if(merge.innie[tempname] == 1)
 			{
+				//noLovl = merge.q_len[tempname] - merge.q_st[tempname][0];
 				noLovl = merge.q_len[tempname] - merge.newEnd[tempname][2];
+				//noRovl = q_last-1;
 				noRovl = merge.newEnd[tempname][3] - 1;
 			}
-			
+			//if(((merge.q_len[tempname] - merge.q_st[tempname][0]) > (merge.ref_st[tempname][0] - 1)) && ((q_last -1) > (merge.ref_len[tempname] - ref_last))) // if query has both right and left overhangs
 			if(((merge.q_len[tempname] - merge.newEnd[tempname][2]) > (merge.newEnd[tempname][0] - 1)) && ((q_last -1) > (merge.ref_len[tempname] - ref_last)))
 			{
+				//noLovl = merge.ref_st[tempname][0];
 				noLovl = merge.newEnd[tempname][0];
 				noRovl = merge.ref_len[tempname] - ref_last;
 			}
@@ -448,11 +480,16 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 	for(unsigned int i=0;i<merge.r_name.size();i++) 
 	{
 		tempname = merge.r_name[i] + merge.q_name[i];		
+		//q_f = merge.q_st[tempname][0];
 		q_f = merge.newEnd[tempname][2];
+		//q_last = merge.q_end[tempname][merge.q_end[tempname].size()-1];
 		q_last = merge.newEnd[tempname][3];
+		//ref_f = merge.ref_st[tempname][0];
 		ref_f = merge.newEnd[tempname][0];
+		//ref_last = merge.ref_end[tempname][merge.ref_end[tempname].size()-1];
 		ref_last = merge.newEnd[tempname][1];
 
+		//if(merge.q_st[tempname][0] < merge.q_end[tempname][0]) // when query is forward oriented
 		if(merge.newEnd[tempname][2] < merge.newEnd[tempname][3])
 		{
 			if((!(((ref_f-1) < (q_f-1)) && ((merge.ref_len[tempname] - ref_last)<(merge.q_len[tempname] - q_last)))) && (merge.innie[tempname]!=1)) //when ref or query not innie
@@ -494,6 +531,7 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 			}
 				
 		}
+		//if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) // when query is reverse oriented
 		if(merge.newEnd[tempname][2] > merge.newEnd[tempname][3])
 		{
 			if((!(((ref_f-1) < (merge.q_len[tempname] - q_f)) && ((merge.ref_len[tempname] - ref_last) < (q_last-1)))) && (merge.innie[tempname]!=1))
@@ -501,6 +539,7 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 				Dist = abs((q_f - q_last)) + merge.nOvlStore[tempname]; 
 				ovrhangQ = merge.q_len[tempname] - Dist; // this would be zero for innie (ovrhangRef = merge.ref_len[tempname] -Dist)
 				ovrhangR = merge.ref_len[tempname] -Dist;
+if(tempname == "Backbone_18/0_1654765 tig00091223"){cout<<abs((q_f - q_last))<<"\t"<<merge.nOvlStore[tempname]<<"\t"<<ovrhangR<<endl;}
 				if(ovrhangQ == -1) //this is to fix edge cases when alignment edges coincides with sequence ends
 				{
 					ovrhangQ = 0 ;
@@ -510,6 +549,7 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 					ovrhangR = 0;
 				}
 			}
+//if(tempname == "Backbone_18/0_1654765 tig00091223"){cout<<abs((q_f - q_last))<<"\t"<<merge.nOvlStore[tempname]<<"\t"<<ovrhangR<<endl;}
 			if(((ref_f-1) < (merge.q_len[tempname] - q_f)) && ((merge.ref_len[tempname] - ref_last) < (q_last-1))) // when ref is innie but query is not
 			{
 				ovrhangQ = -1;
@@ -521,8 +561,10 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 				ovrhangLTq = merge.q_len[tempname] - Dist1; 
 				merge.ovrHangQR[tempname].push_back(ovrhangLTq); // these maps get populated only when these alignments occur
 				merge.ovrHangQR[tempname].push_back(ovrhangRTq);
+if(tempname == "Backbone_18/0_1654765 tig00091223"){cout<<"ref innie"<<"\t"<<merge.ovrHangQR[tempname][0]<<"\t"<<merge.ovrHangQR[tempname][1]<<endl;}
 				
 			}
+//if(tempname == "Backbone_18/0_1654765 tig00091223"){cout<<abs((q_f - q_last))<<"\t"<<merge.nOvlStore[tempname]<<"\t"<<ovrhangR<<endl;}
 			if(merge.innie[tempname] == 1)
 			{
 				ovrhangQ = 0;
@@ -535,6 +577,7 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 				merge.ovrHangQR[tempname].push_back(ovrhangRTr);
 			}
 		}
+//if(tempname == "tig00091223 Backbone_18/0_1654765"){cout<<abs((q_f - q_last))<<"\t"<<merge.nOvlStore[tempname]<<"\t"<<ovrhangR<<endl;}
 	merge.ovrHangQ[tempname] = ovrhangQ; // this should be ovrHangQ and add ovrHangRef
 	merge.ovrHangR[tempname] = ovrhangR;
 	}
@@ -547,7 +590,10 @@ void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double pr
 	for(unsigned int i=0;i<merge.r_name.size();i++)
 	{
 		tempname = merge.r_name[i]+merge.q_name[i];
-		
+		//if(merge.nOvlStore[tempname] == 0)
+		//{
+		//	merge.nOvlStore[tempname] = 1; //resetting the value to avoid division by zero
+		//}
 		prop = merge.ovlStore[tempname]/(double)merge.nOvlStore[tempname];
 		if((prop>propAnchor) && (merge.ref_len[tempname]>merge.q_len[tempname]) && (merge.ref_len[tempname]>length))
 		{
@@ -558,11 +604,15 @@ void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double pr
 				fillToRemove(merge,merge.q_name[i]);//here add only those for which query is an innie
 			}
 		}
-		if((prop > propCutoff) && (merge.ovlStore[tempname]>absLenCutoff) && (merge.innie[tempname]==0))
+		//if((prop > propCutoff) && (merge.ref_len[tempname] > absLenCutoff)) 
+		if((prop > propCutoff) && (merge.ovlStore[tempname]>absLenCutoff))
 		{
 			merge1.r_name.push_back(merge.r_name[i]); //populating the new asmMerge names vector
 			merge1.q_name.push_back(merge.q_name[i]);
-		
+		//	if(merge.innie[tempname] == 1)
+		//	{
+		//		fillToRemove(merge,merge.q_name[i]);//here add only those for which query is an innie
+		//	}
 		}
 	}
 }
@@ -576,11 +626,15 @@ void fillSeq(fastaSeq & fasta, ifstream& fin, char c)
 		if(str[0] == '>')
 		{	
 			fasta.seqName.push_back(str);
+			//str[0] = c; // if c is " " then space is inserted. needed for hybrid seqnames
 			str1 = str;
 			str1[0] = c;
 		}
 		if(str[0] != '>')
 		{
+			//getline(fin,str1);
+			//str[0] = c; // if c is " " then space is inserted. needed for hybrid seqnames
+			//fasta.seq[str] = str1; //fasta.seq[str.substr(1)] = str1; not needed. adding a white space
 			fasta.seq[str1].append(str);
 		}
 	}
@@ -597,8 +651,10 @@ void fillSeq(fastaSeq & fasta, ifstream& fin) // overloaded function. will be te
 			fasta.seqName.push_back(str);
 			str1 = str.substr(1);
 		}
+		//getline(fin,str1);
 		if(str[0] != '>')
 		{
+			//fasta.seq[str.substr(1)] = str1; //fasta.seq[str.substr(1)] = str1 needed to remove leading >
 			fasta.seq[str1].append(str);
 		}
 	}
@@ -682,9 +738,11 @@ size = 0;
 			{
 				size = 	merge.ovrHangQR[str][0]; //left overhang is the first element
 			}
+			//if((merge.sideInfoR[str] == 'L') && (merge.ovrHangQ[str] != -1)) //if the alignment is left oriented and ref is not innie
 			if((merge.overHangSideQ[str] == 'L') && (merge.ovrHangQ[str] != -1))
 			{
 				size = merge.ovrHangQ[str];
+//cout<<str<<"\t"<<merge.ovrHangQ[str]<<endl;
 			}
 		}
                if(RorQ == 'R') //if looking for reference overhang length
@@ -741,10 +799,12 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 			{
 				size = merge.ovrHangQR[str][1]; // second element is the right element
 			}
+			//if((merge.sideInfoR[str] =='R') && (merge.ovrHangQ[str] != -1))
 			if((merge.overHangSideQ[str] == 'R') && (merge.ovrHangQ[str] != -1))
 			{
 				size = merge.ovrHangQ[str];
 			}
+//if(str == "Backbone_18/0_1654765 tig00091223"){cout<<"Longest right\t"<<merge.ovrHangQ[str]<<"\t"<<merge.sideInfo[str]<<"\t"<<merge.sideInfoR[str]<<endl;}
 		
 		}
 		if(RorQ == 'R') //if looking for reference overhang length
@@ -755,18 +815,22 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 				{
 					size = merge.ovrHangQR[str][1]; //right overhang
 				}
+				//if((merge.strandInfo[str] != merge.strandInfo[prevElem]) && (merge.strandInfo[str] == 'L'))
 				if((merge.strandInfo[str] != merge.strandInfo[prevElem]) && (merge.sideInfo[str] == 'L'))
 				{
 					size = merge.ovrHangQR[str][0];//if the previous was right, and this is left, take left overhang
 				}
+				//if((merge.strandInfo[str] != merge.strandInfo[prevElem]) && (merge.strandInfo[str] == 'R'))
 				if((merge.strandInfo[str] != merge.strandInfo[prevElem]) && (merge.sideInfo[str] == 'R'))
 				{
+					//size = merge.ovrHangQR[str][0];//if the previous was left, and this is right, take right overhang
 					size = merge.ovrHangQR[str][1];
 				} 
 			}
 			
 			if((merge.strandInfo[str] == merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1)) //if the references for the query are on the same strand
 			{
+				//if(merge.sideInfo[str] != merge.sideInfo[prevElem]) // they ought to be different
 				if((merge.sideInfoQ[str] != sideQ) || (merge.sideInfo[str] != merge.sideInfo[prevElem]))
 				{
 				size = merge.ovrHangR[str];
@@ -774,14 +838,18 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 			}
 			if((merge.strandInfo[str] != merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1))
 			{
+				//if(merge.sideInfo[str] == merge.sideInfo[prevElem])
 				if((merge.sideInfoQ[str] != sideQ) ||(merge.sideInfo[str] == merge.sideInfo[prevElem]))
 				{
 				size = merge.ovrHangR[str];
 				}
 			}
 		}
+//if(tempname == "Backbone_18/0_1654765"){cout<<str<<"\t"<<size<<"\t"<<seq[i]<<endl;}
+//if(str == "tig00091223 Backbone_18/0_1654765"){cout<<merge.strandInfo[str]<<"\t"<<merge.strandInfo[prevElem]<<"\t"<<sideQ<<"\t"<<merge.sideInfoQ[str]<<endl;}
 		if(size>longest)
 		{
+//if(tempname == " tig00000181"){cout<<str<<"\t"<<size<<"\t"<<seq[i]<<endl;}
 			longest = size;
 			lStr = seq[i];
 		}
@@ -865,6 +933,7 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 		
 			if(lRseq != "")
 			{
+//cout<<lRseq<<endl;
 				merge.lseq[tempname].push_back(lRseq);
 				seqs = vfind(lRseq,temp_rname,temp_qname,merge,guruR,propCutoff);
 				fillToRemove(merge,seqs);
@@ -885,8 +954,10 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			}
 			if(rQseq != "")
 			{
+//cout<<rQseq<<endl;
 				merge.rseq[tempname].push_back(rQseq);
 				seqs = vfind(rQseq,temp_qname,temp_rname,merge,guruR,propCutoff);
+//if(rQseq == " Backbone_18/0_1654765"){cout<<seqs.size()<<"\t"<<seqs[0]<<endl;}
 				if(!seqs.empty())
 				{
 					if(ref != "") //because rRseq is empty when tempname was the previous reference
@@ -895,11 +966,13 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 						trRseq = longestRt(rQseq,seqs,merge,'R',merge.sideInfoQ[tempname+rQseq],prevElem);
 						prevElem = "";
 					}
+//if(rQseq == " tig00000181"){cout<<trRseq<<endl;}
 					if(ref == "")
 					{
 						prevElem = refForSideR + rQseq;
 						trRseq = longestRt(rQseq,seqs,merge,'R',merge.sideInfoQ[refForSideR+rQseq],prevElem);//refForSideR is the previous reference for this query
 						prevElem = "";
+//if(rQseq == " tig00000181"){cout<<trRseq<<endl;}
 					}
 					rRseq = trRseq;
 					refSeqToRemove.push_back(rRseq);
@@ -910,17 +983,21 @@ void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq &
 			}
 			if(rRseq != "")
 			{
+//cout<<rRseq<<endl;
 				merge.rseq[tempname].push_back(rRseq);
 				seqs = vfind(rRseq,temp_rname,temp_qname,merge,guruR,propCutoff);
+//if(rRseq == "tig00091223"){cout<<seqs.size()<<endl;}
 				fillToRemove(merge,seqs);
 				if(!seqs.empty())
 				{
 					if(merge.sideInfo[rRseq+trQseq] == 'R') //if previous alignment was on the right side of the reference
 					{
+//if(rRseq == "tig00091223"){cout<<merge.sideInfo[rRseq+trQseq]<<endl;}
 						rQseq = longestLeft(rRseq,seqs,merge,'Q','N',prevElem); // again N because no need to check for query side 
 					}
 					if(merge.sideInfo[rRseq+trQseq] == 'L') //if previous alignment was on the right side of the reference
 					{
+//if(rRseq == "tig00091223"){cout<<merge.sideInfo[rRseq+trQseq]<<endl;}
 						rQseq = longestRt(rRseq,seqs,merge,'Q','N',prevElem); // again N because no need to check for query side NEW
 					}
 				}
@@ -1022,11 +1099,13 @@ void fillOri(asmMerge & merge, asmMerge & merge1)
 
 			if(i==0 && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end())) //if first element is query
 			{
+				//if(merge.q_st[merge1.rseq[name][i]][0] > merge.q_end[merge1.rseq[name][i]][0]) //if alignment is reverse complementary
 				if(merge.newEnd[merge1.rseq[name][i]][2] > merge.newEnd[merge1.rseq[name][i]][3])
 				{
 					merge.Ori[name].push_back(1); // starting query will not be changed, the next reference will be reverse complemented
 					prev = prev * (-1);
 				}
+				//if(merge.q_st[merge1.rseq[name][i]][0] < merge.q_end[merge1.rseq[name][i]][0])
 				if(merge.newEnd[merge1.rseq[name][i]][2] < merge.newEnd[merge1.rseq[name][i]][3])
 				{
 					merge.Ori[name].push_back(prev);
@@ -1039,11 +1118,14 @@ void fillOri(asmMerge & merge, asmMerge & merge1)
 				{
 					merge.Ori[name].push_back(prev); //prev = prev *1 because reference follows orientation of the query
 				}
-				
+				//prev = prev; // unnecessary but shows that prev does not change
+
+				//if(i>0 && (merge.q_st[merge1.rseq[name][i-1]][0] < merge.q_end[merge1.rseq[name][i-1]][0])) // if previous alignment was not reverse complementary
 				if(i>0 && (merge.newEnd[merge1.rseq[name][i-1]][2] < merge.newEnd[merge1.rseq[name][i-1]][3]))
 				{				
 					merge.Ori[name].push_back(prev);	
 				}
+				//if(i>0 && (merge.q_st[merge1.rseq[name][i-1]][0] > merge.q_end[merge1.rseq[name][i-1]][0])) // if previous alignment was reverse complementary
 				if(i>0 && (merge.newEnd[merge1.rseq[name][i-1]][2] > merge.newEnd[merge1.rseq[name][i-1]][3]))
 				{	
 					if((i==1) && (merge.Ori[name][i-1] != -1)) // previous alignment was reverse but was recorded as 1
@@ -1062,11 +1144,13 @@ void fillOri(asmMerge & merge, asmMerge & merge1)
 			}
 			if((i>0) && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end()))
 			{
+				//if(merge.q_st[merge1.rseq[name][i-1]][0] > merge.q_end[merge1.rseq[name][i-1]][0]) //if alignment is reverse complementary
 				if(merge.newEnd[merge1.rseq[name][i-1]][2] > merge.newEnd[merge1.rseq[name][i-1]][3])
 				{	
 					prev = prev * (-1);
 					merge.Ori[name].push_back(prev);
 				}
+				//if(merge.q_st[merge1.rseq[name][i-1]][0] < merge.q_end[merge1.rseq[name][i-1]][0])
 				if(merge.newEnd[merge1.rseq[name][i-1]][2] < merge.newEnd[merge1.rseq[name][i-1]][3])
 				{
 					merge.Ori[name].push_back(prev);
@@ -1154,9 +1238,12 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 			if( i ==0 && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end()))//if first element is query
 			{
 				indexL2 = merge1.rseq[name][i]; // index name coresponding to the query element
+				//q2_f = merge.q_st[indexL2][0];
 				q2_f = merge.newEnd[indexL2][2];
+				//q2_last = merge.q_end[indexL2][merge.q_end[indexL2].size()-1];	
 				q2_last = merge.newEnd[indexL2][3];
 			
+				//if(q2_f > merge.q_end[indexL2][0]) // if query is reverse oriented
 				if(q2_f>q2_last)
 				{
 					if(merge.sideInfoR[indexL2] == 'L')
@@ -1169,6 +1256,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q2_last);
 					}	
 				}
+				//if(q2_f < merge.q_end[indexL2][0]) // if query is forward oriented
 				if(q2_f < q2_last)
 				{
 					if(merge.sideInfoR[indexL2] == 'L')
@@ -1194,7 +1282,9 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 			if(i == 0 && (find(merge.r_name.begin(),merge.r_name.end(),merge1.lseq[name][i]) != merge.r_name.end())) // if first element is reference
 			{
 				indexL2 = merge1.rseq[name][i];
+				//r2_last = merge.ref_end[indexL2][merge.ref_end[indexL2].size()-1];
 				r2_last = merge.newEnd[indexL2][1];
+				//r2_f = merge.ref_st[indexL2][0];
 				r2_f = merge.newEnd[indexL2][0];
 				if(merge1.lseq[name][i] == name)
 				{
@@ -1225,7 +1315,9 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 			if(i > 0 && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end())) // if the element is query
 			{
 				indexL1 = merge1.rseq[name][i-1];
+				//q1_f = merge.q_st[indexL1][0];
 				q1_f = merge.newEnd[indexL1][2];
+				//q1_last = merge.q_end[indexL1][merge.q_end[indexL1].size()-1];
 				q1_last = merge.newEnd[indexL1][3];
 				
 				if((merge.Ori[name][i-1] ==1) && merge.sideInfo[merge1.rseq[name][i-1]] == 'L')
@@ -1235,7 +1327,9 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 				if(i != (merge1.lseq[name].size()-1)) //if it isn't the last element
 				{
 					indexL2 = merge1.rseq[name][i];
+					//q2_f = merge.q_st[indexL2][0];
 					q2_f = merge.newEnd[indexL2][2];
+					//q2_last = merge.q_end[indexL2][merge.q_end[indexL2].size() -1];
 					q2_last = merge.newEnd[indexL2][3];
 					if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 0) //alignments are non-overlapping
 					{
@@ -1253,6 +1347,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 				if( i == (merge1.lseq[name].size()-1)) // if this is the last element
 				{
 				
+					//if(merge.q_st[merge1.rseq[name][i-1]][0] > merge.q_end[merge1.rseq[name][i-1]][0]) // last element uses (i-1) th index. if query reverse oriented
 					if(merge.newEnd[merge1.rseq[name][i-1]][2] > merge.newEnd[merge1.rseq[name][i-1]][3])
 					{
 						subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
@@ -1281,6 +1376,7 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 						
 						
 					}
+					//if(merge.q_st[merge1.rseq[name][i-1]][0] < merge.q_end[merge1.rseq[name][i-1]][0]) // if query is forward oriented
 					if(merge.newEnd[merge1.rseq[name][i-1]][2] < merge.newEnd[merge1.rseq[name][i-1]][3])
 					{
 						if(merge.sideInfo[merge1.rseq[name][i-1]] == 'L')
@@ -1323,19 +1419,25 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 			if(i>0 && (find(merge.r_name.begin(),merge.r_name.end(),merge1.lseq[name][i]) != merge.r_name.end())) // if the element is reference
 			{
 				indexL1 = merge1.rseq[name][i-1];
+				//r1_f = merge.ref_st[indexL1][0];
 				r1_f = merge.newEnd[indexL1][0];
+				//r1_last = merge.ref_end[indexL1][merge.ref_end[indexL1].size()-1];
 				r1_last = merge.newEnd[indexL1][1];
 				
 
 				if(i != (merge1.lseq[name].size()-1)) // if this is not the last element
 				{
 					indexL2 = merge1.rseq[name][i];
+					//r2_f = merge.ref_st[indexL2][0];	
 					r2_f = merge.newEnd[indexL2][0];			
+					//r2_last = merge.ref_end[indexL2][merge.ref_end[indexL2].size()-1];
 					r2_last = merge.newEnd[indexL2][1];
 					
 					if(tempRef_st != 0)
 					{
 						r1_f = tempRef_st;
+						//r1_last = tempRef_st; //transfer the number so that it is used in case of an overlap;
+						//v1 = maxD(r1_last,r1_last,r2_f,r2_last);//CHANGED
 					}
 					v1 = maxD(r1_f,r1_last,r2_f,r2_last); // maximum distance between coords from the two alignments
 					r1_f = min(v1[0],v1[1]);
@@ -1396,15 +1498,19 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					if(subseq.size() == 0) //if subseq has not been modified by condition 1 in the preceding section
 					{
 					subseq = pbOnly.seq[merge1.lseq[name][i]].substr(r1_f,(merge.ref_len[indexL1] - r1_f));
+//cout<<name<<"\t"<<r1_f<<endl;
 					}
 				}
+//cout<<name<<"\t"<<subseq.size()<<endl;
 				if(merge.Ori[name][i] == -1)
 				{
 					subseqR = revCom(subseq);
 					subseq = subseqR;
 				}
 			}
-
+//if(name == "Backbone_18/0_1654765" && i>1) {cout<<merge1.lseq[name][i]<<"\t"<<subseq.size()<<"\t"<<"\t"<<begin_insrt<<"\t"<<merge.Ori[name][i]<<"\t"<<merge.sideInfo[merge1.rseq[name][i-1]]<<endl;}
+//if(name == "Backbone_31/0_9438914") {cout<<begin_insrt<<endl;}
+//cout<<name<<"\t"<<merge1.lseq[name][i]<<"\t"<<subseq.size()<<endl;
 			if(begin_insrt == -1)
 			{
 					subseq.append(seqHolder);
@@ -1423,7 +1529,6 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 			}
 		}
 		merged.seq[name] = seqHolder;
-cout<<"Merged Contig and length: "<<name<<"\t"<<seqHolder.size()<<endl;
 		seqHolder.clear();
 		
 	}
@@ -1524,11 +1629,17 @@ int q1_f,q1_end,q2_f,q2_end,r2_f,r2_end;
 
 int cord =0;
 
+//q1_f = merge.q_st[tempname1][0];
 q1_f = merge.newEnd[tempname1][2];
+//q1_end = merge.q_end[tempname1][merge.q_end[tempname1].size()-1];
 q1_end = merge.newEnd[tempname1][3];
+//q2_f = merge.q_st[tempname2][0];
 q2_f = merge.newEnd[tempname2][2];
+//q2_end = merge.q_end[tempname2][merge.q_end[tempname2].size()-1];
 q2_end = merge.newEnd[tempname2][3];
+//r2_f = merge.ref_st[tempname2][0];
 r2_f = merge.newEnd[tempname2][0];
+//r2_end = merge.ref_end[tempname2][merge.ref_end[tempname2].size()-1];
 r2_end = merge.newEnd[tempname2][1];
 
 	if(q2_f>q2_end)
@@ -1643,10 +1754,13 @@ int Dist =0;
 	{
 		tempname = merge.r_name[i]+merge.q_name[i];
 		qMid = int(merge.q_len[tempname] * 0.5);
+		//q_f = merge.q_st[tempname][0];
 		q_f = merge.newEnd[tempname][2];
+		//q_last = merge.q_end[tempname][merge.q_end[tempname].size() -1];
 		q_last = merge.newEnd[tempname][3];
 		Dist = abs(q_last-q_f); // total alignment length
 		
+		//if(merge.q_st[tempname][0] < merge.q_end[tempname][0]) // query is forward oriented
 		if(q_f < q_last)
 		{
 			qAlnMid = q_f + (Dist *0.5); //midpoint of alignment
@@ -1663,6 +1777,7 @@ int Dist =0;
 				merge.sideInfoQ[tempname] = 'U';
 			}
 		}
+		//if(merge.q_st[tempname][0] > merge.q_end[tempname][0]) //query is reverse oriented
 		if(q_f > q_last)
 		{
 			qAlnMid = q_f - (Dist *0.5); // midpoint of the alignment
@@ -1689,10 +1804,12 @@ void assignStrand(asmMerge & merge)
 	for(unsigned int i =0;i<merge.r_name.size();i++)
 	{
 		tempname = merge.r_name[i]+merge.q_name[i];
+		//if(merge.q_st[tempname] > merge.q_end[tempname]) // if reverse complement
 		if(merge.newEnd[tempname][2] > merge.newEnd[tempname][3])
 		{
 			merge.strandInfo[tempname] = 1;
 		}
+		//if(merge.q_st[tempname]<merge.q_end[tempname]) // if same strand
 		if(merge.newEnd[tempname][2] < merge.newEnd[tempname][3])
 		{
 			merge.strandInfo[tempname] = 0;
@@ -1770,6 +1887,7 @@ void overHangSideR(asmMerge & merge) // whether overhanging query is on the 5' o
                                 merge.overHangSideQ[tempname] = 'R'; // overhang is on the right side of the reference
                         }
 		}
+//if((merge.ovrHangQ[tempname] != -1) ||(merge.ovrHangR[tempname] != -1)){cout<<tempname <<"\t"<<merge.overHangSideQ[tempname]<<endl;}
 	}
 }
 		

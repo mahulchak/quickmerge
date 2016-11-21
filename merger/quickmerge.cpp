@@ -39,8 +39,7 @@ int main(int argc, char * argv[])
 	int r_st = 0;
 	int r_end = 0;
 	const int length = atoi(argv[12]);
-	int const absLenCutoff = atoi(argv[14]);
-
+	const int absLenCutoff = atoi(argv[14]);
 	if(*argv[8])
 	{
 		hco = strtod(argv[8],NULL);
@@ -82,14 +81,16 @@ int main(int argc, char * argv[])
 	fin.close();
 
 	writeToFile(merge);
+	ovlStoreCalculator(merge);
 	innieChecker(merge);
 	sideChecker(merge);
 	sideCheckerR(merge);
 	sideCheckerQ(merge);
 	assignStrand(merge);
-	ovlStoreCalculator(merge);
+	//ovlStoreCalculator(merge);
 	nOvlStoreCalculator(merge);
 	ovrHngCal(merge);
+	overHangSideR(merge);
 	writeSummary(merge);
 	
 	if(*argv[4])

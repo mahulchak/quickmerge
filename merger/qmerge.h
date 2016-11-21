@@ -39,6 +39,8 @@ map<string,vector<string> > rseq;
 map<string,vector<int> > Ori;
 map<string,bool> qToRemove; 
 map<string,bool> strandInfo;
+map<string,vector<int> > newEnd;
+map<string,char> overHangSideQ;
 };
 
 class fastaSeq{
@@ -85,4 +87,6 @@ string reversed(string & str);
 int returnIndex (vector<string> & myvector, string & str);
 void assignStrand(asmMerge & merge);
 void discAnchor(string & guruQ, asmMerge & merge,string & guruRef,double propCutoff);
+void lisCalculator(asmMerge & merge,string & tempname,vector<int> &ref_st,vector<int> & ref_end,vector<int> & q_st,vector<int> & q_end);
+void overHangSideR(asmMerge & merge);
 #endif
