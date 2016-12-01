@@ -61,9 +61,10 @@ void nOvlStoreCalculator(asmMerge & merge);
 void writeSummary(asmMerge & merge);
 string revCom(string & str);
 void ovrHngCal(asmMerge & merge);
-void fillAnchor(asmMerge & merge, asmMerge & merge1, double propAnchor, double propCutoff,const int & length,const int & absLenCutoff);
+void fillAnchor(asmMerge & merge, asmMerge & merge1, double propAnchor, double propCutoff,const int & length,const int & absLenCutoff, fastaSeq & hyb);
 void fillSeq(fastaSeq & fasta, ifstream& fin, char c);
 void fillSeq(fastaSeq & fasta, ifstream& fin);
+void trimSeq(asmMerge & merge,fastaSeq & hyb);
 void writeAnchorSummary(asmMerge & merge);
 void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged,double propCutoff);
 vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname,asmMerge & merge,string & guruRef,double propCutoff);
@@ -89,4 +90,5 @@ void assignStrand(asmMerge & merge);
 void discAnchor(string & guruQ, asmMerge & merge,string & guruRef,double propCutoff);
 void lisCalculator(asmMerge & merge,string & tempname,vector<int> &ref_st,vector<int> & ref_end,vector<int> & q_st,vector<int> & q_end);
 void overHangSideR(asmMerge & merge);
+void splitHaplo(asmMerge & merge,fastaSeq & hybrid);
 #endif

@@ -102,8 +102,12 @@ int main(int argc, char * argv[])
 	pb.open(argv[6]);
 	}
 	fillSeq(hybrid,hyb,' ');
+	if(string(argv[16]) == "Y")
+	{
+		splitHaplo(merge,hybrid);
+	}
 	fillSeq(pbOnly,pb);
-	fillAnchor(merge,merge1,hco,cutoff,length,absLenCutoff);
+	fillAnchor(merge,merge1,hco,cutoff,length,absLenCutoff,hybrid);
 	writeAnchorSummary(merge);
 
 
@@ -123,6 +127,7 @@ int main(int argc, char * argv[])
 	}
 
 	removeSeq(merge,hybrid,merged); // copy unaligned hybrid contigs to merged 
+	//trimSeq(merge,hybrid);
 	ctgJoiner(merge,merge1,hybrid,pbOnly,merged);
 	writeMerged(merged,fout);
 	fout.close();

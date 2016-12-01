@@ -540,7 +540,7 @@ int ovrhangRTq,ovrhangLTq,Dist1,ovrhangRTr,ovrhangLTr;
 	}
 }
 ////////////////////////////////////////////////////////////////////
-void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double propCutoff, const int & length, const int & absLenCutoff)
+void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double propCutoff, const int & length, const int & absLenCutoff,fastaSeq & hyb)
 {
 	string tempname;
 	double prop;
@@ -556,14 +556,41 @@ void fillAnchor(asmMerge & merge,asmMerge & merge1, double propAnchor, double pr
 			if(merge.innie[tempname] == 1)
 			{
 				fillToRemove(merge,merge.q_name[i]);//here add only those for which query is an innie
+				
 			}
 		}
-		if((prop > propCutoff) && (merge.ovlStore[tempname]>absLenCutoff) && (merge.innie[tempname]==0))
+		if((prop > propCutoff) && (merge.ovlStore[tempname]>absLenCutoff))
 		{
 			merge1.r_name.push_back(merge.r_name[i]); //populating the new asmMerge names vector
 			merge1.q_name.push_back(merge.q_name[i]);
-		
+
 		}
+	}
+}
+///////////////////////////////////////////////////////////////////////
+void trimSeq(asmMerge & merge, fastaSeq & hyb)
+{
+	vector<string> qToTrim;
+	string tempname,tempSeq;
+	for(unsigned int i=0;i<merge.r_name.size();i++)
+	{
+		tempname = merge.r_name[i] + merge.q_name[i];
+		if((merge.innie[tempname] == 1) && (find(qToTrim.begin(),qToTrim.end(),merge.q_name[i]) == qToTrim.end()))
+                        {
+                                qToTrim.push_back(merge.q_name[i]);
+                                if(merge.newEnd[tempname][2] > merge.newEnd[tempname][3])
+                                {
+                                        tempSeq = hyb.seq[merge.q_name[i]].substr(0,merge.newEnd[tempname][3]);
+                                        hyb.seq[merge.q_name[i]] = tempSeq;
+                                        tempSeq.clear();
+                                }
+                                if(merge.newEnd[tempname][2] < merge.newEnd[tempname][3])
+                                {
+                                        tempSeq = hyb.seq[merge.q_name[i]].substr(merge.newEnd[tempname][3]);
+                                        hyb.seq[merge.q_name[i]] = tempSeq;
+                                        tempSeq.clear();
+                                }
+                        }
 	}
 }
 //////////////////////////////////////////////////////////////////////////
@@ -695,14 +722,16 @@ size = 0;
 			}
 			if((merge.strandInfo[str] == merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1)) //if the references for the query are on the same strand
 			{
-				if(merge.sideInfo[str] != merge.sideInfo[prevElem]) // they ought to be different
+			//	if(merge.sideInfo[str] != merge.sideInfo[prevElem]) // they ought to be different
+				if((merge.sideInfoQ[str] != sideQ) || (merge.sideInfo[str] != merge.sideInfo[prevElem]))
 				{
 				size = merge.ovrHangR[str];
 				}
 			}
 			if((merge.strandInfo[str] != merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1))
 			{
-				if(merge.sideInfo[str] == merge.sideInfo[prevElem]) // they will be same if the two references are on different strands
+				//if(merge.sideInfo[str] == merge.sideInfo[prevElem]) // they will be same if the two references are on different strands
+				if((merge.sideInfoQ[str] != sideQ) ||(merge.sideInfo[str] == merge.sideInfo[prevElem]))
 				{
 				size = merge.ovrHangR[str];
 				}
@@ -768,15 +797,17 @@ string longestRt(string tempname, vector<string>& seq,asmMerge & merge, char Ror
 			if((merge.strandInfo[str] == merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1)) //if the references for the query are on the same strand
 			{
 				if((merge.sideInfoQ[str] != sideQ) || (merge.sideInfo[str] != merge.sideInfo[prevElem]))
+				//if(merge.sideInfo[str] != merge.sideInfo[prevElem])
 				{
-				size = merge.ovrHangR[str];
+					size = merge.ovrHangR[str];
 				}
 			}
 			if((merge.strandInfo[str] != merge.strandInfo[prevElem]) && (merge.ovrHangR[str] != -1))
 			{
 				if((merge.sideInfoQ[str] != sideQ) ||(merge.sideInfo[str] == merge.sideInfo[prevElem]))
+				//if(merge.sideInfo[str] == merge.sideInfo[prevElem])
 				{
-				size = merge.ovrHangR[str];
+					size = merge.ovrHangR[str];
 				}
 			}
 		}
@@ -1221,106 +1252,110 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 				}
 			}
 
-		
 			if(i > 0 && (find(merge.q_name.begin(),merge.q_name.end(),merge1.lseq[name][i])!=merge.q_name.end())) // if the element is query
 			{
 				indexL1 = merge1.rseq[name][i-1];
 				q1_f = merge.newEnd[indexL1][2];
 				q1_last = merge.newEnd[indexL1][3];
-				
-				if((merge.Ori[name][i-1] ==1) && merge.sideInfo[merge1.rseq[name][i-1]] == 'L')
+			if((merge.Ori[name][i-1] ==1) && merge.sideInfo[merge1.rseq[name][i-1]] == 'L')
+			{
+				begin_insrt = -1;
+			}
+			if(i != (merge1.lseq[name].size()-1)) //if it isn't the last element
+			{
+				indexL2 = merge1.rseq[name][i];
+				q2_f = merge.newEnd[indexL2][2];
+				q2_last = merge.newEnd[indexL2][3];
+				if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 0) //alignments are non-overlapping
 				{
-					begin_insrt = -1;
+					v1 = minD(q1_f,q1_last,q2_f,q2_last);
+					cheatF = min(v1[0],v1[1]);
+					cheatR = max(v1[0],v1[1]);
+					subseq = hybrid.seq[merge1.lseq[name][i]].substr(cheatF,(cheatR-cheatF));
 				}
-				if(i != (merge1.lseq[name].size()-1)) //if it isn't the last element
+				if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 1) // if alignments are overlapping
 				{
-					indexL2 = merge1.rseq[name][i];
-					q2_f = merge.newEnd[indexL2][2];
-					q2_last = merge.newEnd[indexL2][3];
-					if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 0) //alignments are non-overlapping
-					{
-						v1 = minD(q1_f,q1_last,q2_f,q2_last);
-						cheatF = min(v1[0],v1[1]);
-						cheatR = max(v1[0],v1[1]);
-						subseq = hybrid.seq[merge1.lseq[name][i]].substr(cheatF,(cheatR-cheatF));
-					}
-					if(chkOvl(q1_f,q1_last,q2_f,q2_last) == 1) // if alignments are overlapping
-					{
-						tempRef_st = mapQonRef(indexL1,indexL2,merge);
-						subseq = ""; // may be add a single base if this causes segfault for revcom
-					}
+					tempRef_st = mapQonRef(indexL1,indexL2,merge);
+					subseq = ""; // may be add a single base if this causes segfault for revcom
 				}
-				if( i == (merge1.lseq[name].size()-1)) // if this is the last element
+			}
+			if( i == (merge1.lseq[name].size()-1)) // if this is the last element
+			{
+			
+				if(merge.newEnd[merge1.rseq[name][i-1]][2] > merge.newEnd[merge1.rseq[name][i-1]][3]) //if reverse complement
 				{
-				
-					if(merge.newEnd[merge1.rseq[name][i-1]][2] > merge.newEnd[merge1.rseq[name][i-1]][3])
+					subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
+					
+					if((i>1) && (merge1.lseq[name][i] == merge1.lseq[name][i-2])) //if two queries for the reference are same
+					{
+						if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'L')
+						{
+							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_f,(merge.q_len[merge1.rseq[name][i-1]] - q1_f));
+						}
+						if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'R')
+						{
+							subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
+						}
+
+					}
+					if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
 					{
 						subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
 						
-						if((i>1) && (merge1.lseq[name][i] == merge1.lseq[name][i-2])) //if two queries for the reference are same
-						{
-							if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'L')
-                                                        {
-                                                                subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_f,(merge.q_len[merge1.rseq[name][i-1]] - q1_f));
-                                                        }
-                                                        if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'R')
-                                                        {
-                                                                subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
-                                                        }
-
-						}
-						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
-                                                {
-                                                        subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
-                                                        
-                                                }
-						if(merge.sideInfo[merge1.rseq[name][i-1]] == 'L') //if the reference 5' is away from seed
-						{
-							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last); //go from smallest to the end of the query
-						}
-						
-						
 					}
-					if(merge.newEnd[merge1.rseq[name][i-1]][2] < merge.newEnd[merge1.rseq[name][i-1]][3])
+					//if((merge.sideInfo[merge1.rseq[name][i-1]] == 'L') && !((merge1.lseq[name][i] == merge1.lseq[name][i-2]))) //if the reference 5' is away from seed (TODO:bring it one step up and use elseif)
+					if((merge.overHangSideQ[merge1.rseq[name][i-1]] == 'L') && (i>1) && (!(merge1.lseq[name][i] == merge1.lseq[name][i-2])))
 					{
-						if(merge.sideInfo[merge1.rseq[name][i-1]] == 'L')
+						//subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last); //go from smallest to the end of the query
+						subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_f);
+					}
+					if((merge.overHangSideQ[merge1.rseq[name][i-1]] == 'R') && (i>1) && (!(merge1.lseq[name][i] == merge1.lseq[name][i-2])))
+					{
+						subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_last);
+					}
+					
+					
+				}
+				if(merge.newEnd[merge1.rseq[name][i-1]][2] < merge.newEnd[merge1.rseq[name][i-1]][3]) //same strand
+				{
+					if(merge.sideInfo[merge1.rseq[name][i-1]] == 'L')
+					{
+						subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_f);
+					}
+					if(merge.sideInfo[merge1.rseq[name][i-1]] == 'R')
+					{
+						subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
+					}
+					if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
+					{
+						subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
+					}
+					if((i>1) && (merge1.lseq[name][i] == merge1.lseq[name][i-2]))//if two queries for the reference are same
+					{
+						if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'L')
+						{
+							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
+						}
+						if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'R')
 						{
 							subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_f);
 						}
-						if(merge.sideInfo[merge1.rseq[name][i-1]] == 'R')
-						{
-							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
-						}
-						if(merge1.lseq[name][i] == merge1.lseq[name][0]) //if first element and last elements are same
-						{
-							subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
-						}
-						if((i>1) && (merge1.lseq[name][i] == merge1.lseq[name][i-2]))//if two queries for the reference are same
-						{
-							if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'L')
-                                                        {
-                                                                subseq = hybrid.seq[merge1.lseq[name][i]].substr(q1_last);
-                                                        }
-                                                        if(merge.sideInfoQ[merge1.rseq[name][i-3]] == 'R')
-                                                        {
-                                                                subseq = hybrid.seq[merge1.lseq[name][i]].substr(0,q1_f);
-                                                        }
 
-						}
 					}
-
 				}
 
-				if(merge.Ori[name][i] == -1)
-				{
-					subseqR = revCom(subseq); // if needs to be reverse complemented
-					subseq = subseqR;
-					
-				}
 			}
 
+			if(merge.Ori[name][i] == -1)
+			{
+				subseqR = revCom(subseq); // if needs to be reverse complemented
+				subseq = subseqR;
+				
+			}
+		}
 
-			if(i>0 && (find(merge.r_name.begin(),merge.r_name.end(),merge1.lseq[name][i]) != merge.r_name.end())) // if the element is reference
+
+		if(i>0 && (find(merge.r_name.begin(),merge.r_name.end(),merge1.lseq[name][i]) != merge.r_name.end())) // if the element is reference
 			{
 				indexL1 = merge1.rseq[name][i-1];
 				r1_f = merge.newEnd[indexL1][0];
@@ -1404,7 +1439,6 @@ void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq & 
 					subseq = subseqR;
 				}
 			}
-
 			if(begin_insrt == -1)
 			{
 					subseq.append(seqHolder);
@@ -1772,4 +1806,20 @@ void overHangSideR(asmMerge & merge) // whether overhanging query is on the 5' o
 		}
 	}
 }
-		
+/////////////////////////////////////////////////////////////////////////////////
+void splitHaplo(asmMerge & merge,fastaSeq & hybrid)
+{
+	string hybname;
+	ofstream fout;
+	fout.open("residuals.fasta");
+	for(map<string,string>::iterator it=hybrid.seq.begin();it!=hybrid.seq.end();it++)
+	{
+		hybname = it->first;
+		if(find(merge.q_name.begin(),merge.q_name.end(),hybname) == merge.q_name.end())//if the fasta seq is not present in the delta file
+		{
+			fout<<">"<<hybname<<endl;
+			fout<<it->second<<endl;
+			hybrid.seq.erase(it);
+		}
+	}
+}				
