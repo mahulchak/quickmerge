@@ -1,6 +1,6 @@
 
-#ifndef MASM_H_
-#define MASM_H_
+#ifndef QMERGE_H_
+#define QMERGE_H_
 
 #include<vector>
 #include<string>
