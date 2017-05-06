@@ -1689,6 +1689,10 @@ int qAlnMid;
 		if(q_f < q_last)
 		{
 			qAlnMid = (q_last * 0.5);
+			if(qAlnMid == qMid) //when query is innie
+			{
+				merge.sideInfoQ[tempname] = 'U';//having 'U' was leading to missing segments in pac to pac merging
+			}
 			if((merge.q_len[tempname] -q_last) < (q_f -1))
 			{
 				merge.sideInfoQ[tempname] = 'R';
@@ -1697,14 +1701,15 @@ int qAlnMid;
 			{
 				merge.sideInfoQ[tempname] = 'L';
 			}
-			if(qAlnMid == qMid) //when query is innie
-			{
-				merge.sideInfoQ[tempname] = merge.sideInfo[tempname];//having 'U' was leading to missing segments in pac to pac merging
-			}
+			
 		}
 		if(q_f > q_last) //reverse strand
 		{
 			qAlnMid = (q_f *0.5);
+			if(qAlnMid == qMid)
+			{
+				merge.sideInfoQ[tempname] = 'U';
+			}
 			if((merge.q_len[tempname] - q_f) < (q_last -1))
 			{
 			 	merge.sideInfoQ[tempname] = 'R';
@@ -1713,10 +1718,7 @@ int qAlnMid;
 			{
 				merge.sideInfoQ[tempname] = 'L';
 			}
-			if(qAlnMid == qMid)
-			{
-				merge.sideInfoQ[tempname] = merge.sideInfo[tempname];
-			}
+			
 		}
 	}
 
