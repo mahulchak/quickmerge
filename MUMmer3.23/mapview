@@ -1,9 +1,9 @@
-#!/software/bin/perl
+#!/usr/bin/perl
 
-use lib "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+use lib "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 use Foundation;
 
-my $SCRIPT_DIR = "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+my $SCRIPT_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 
 
 my $VERSION_INFO = q~

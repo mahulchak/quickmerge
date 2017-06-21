@@ -1,4 +1,4 @@
-#!/software/bin/perl
+#!/usr/bin/perl
 
 ################################################################################
 #   Programmer: Adam M Phillippy, The Institute for Genomic Research
@@ -16,13 +16,13 @@
 # 
 ################################################################################
 
-use lib "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+use lib "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 use Foundation;
 use strict;
 use IO::Socket;
 
-my $BIN_DIR = "/Home/mmoser/quickmerge/MUMmer3.23";
-my $SCRIPT_DIR = "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+my $BIN_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23";
+my $SCRIPT_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 
 
 #================================================================= Globals ====#

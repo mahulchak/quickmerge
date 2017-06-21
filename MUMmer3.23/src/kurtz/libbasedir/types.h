@@ -45,6 +45,7 @@ typedef unsigned short Ushort;        // \Typedef{Ushort}
   code for 32 bit integers and 64 bit integers.
 */
 
+#define SIXTYFOURBITS
 #ifdef SIXTYFOURBITS
 
 typedef unsigned long  Uint;          // \Typedef{Uint}

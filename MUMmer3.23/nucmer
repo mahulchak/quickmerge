@@ -1,4 +1,4 @@
-#!/software/bin/perl
+#!/usr/bin/perl
 
 #-------------------------------------------------------------------------------
 #   Programmer: Adam M Phillippy, The Institute for Genomic Research
@@ -15,14 +15,14 @@
 #
 #-------------------------------------------------------------------------------
 
-use lib "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+use lib "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 use Foundation;
 use File::Spec::Functions;
 use strict;
 
-my $AUX_BIN_DIR = "/Home/mmoser/quickmerge/MUMmer3.23/aux_bin";
-my $BIN_DIR = "/Home/mmoser/quickmerge/MUMmer3.23";
-my $SCRIPT_DIR = "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+my $AUX_BIN_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23/aux_bin";
+my $BIN_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23";
+my $SCRIPT_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 
 
 my $VERSION_INFO = q~

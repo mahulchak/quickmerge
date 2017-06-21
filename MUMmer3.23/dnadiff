@@ -1,4 +1,4 @@
-#!/software/bin/perl -w
+#!/usr/bin/perl -w
 
 #-------------------------------------------------------------------------------
 #   Programmer: Adam M Phillippy, University of Maryland
@@ -9,13 +9,13 @@
 #
 #-------------------------------------------------------------------------------
 
-use lib "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+use lib "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 use Foundation;
 use File::Spec::Functions;
 use strict;
 
-my $BIN_DIR = "/Home/mmoser/quickmerge/MUMmer3.23";
-my $SCRIPT_DIR = "/Home/mmoser/quickmerge/MUMmer3.23/scripts";
+my $BIN_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23";
+my $SCRIPT_DIR = "/home/edwin/bin/quickmerge/MUMmer3.23/scripts";
 
 my $VERSION_INFO = q~
 DNAdiff version 1.3
