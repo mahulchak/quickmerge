@@ -7,7 +7,7 @@ mergerpath=`pwd`
 cd ../MUMmer3.23
 mkdir aux_bin
 make clean
-if [ $1 = "64" | $1 = "" ]; then
+if [ $1 = "64" ] || [ $# -eq 0 ]; then
    make CPPFLAGS="-O3 -DSIXTYFOURBITS"
 elif [ $1 = "32" ]; then
    make
