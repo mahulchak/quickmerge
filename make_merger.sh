@@ -3,8 +3,8 @@
 cd merger
 make clean
 make
-mergerpath=`pwd`
 cd ..
+mergerpath=`pwd`
 cd MUMmer3.23
 mkdir aux_bin
 make clean
