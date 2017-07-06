@@ -4,7 +4,8 @@ cd merger
 make clean
 make
 mergerpath=`pwd`
-cd ../MUMmer3.23
+cd ..
+cd MUMmer3.23
 mkdir aux_bin
 make clean
 if [ $1 = "64" ] || [ $# -eq 0 ]; then
@@ -20,4 +21,18 @@ make install
 mummerpath=`pwd`
 cd ..
 
-#export PATH=$mergerpath:$mummerpath:$PATH
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo ""
+echo "##############################################"
+echo "Please add to your path by:"
+echo "export PATH=$mergerpath:$mummerpath:\$PATH"
+echo ""
+echo "or by:"
+echo "source $mergerpath/.quickmergerc"
+echo ""
+echo "Please paste the follwing in your cluster submission script prior to running the quickmerge wrapper"
+echo "export PATH=$mergerpath:$mummerpath:\$PATH" > .quickmergerc
