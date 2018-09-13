@@ -7,7 +7,8 @@
 #include<map>
 #include<fstream>
 #include<algorithm>
-
+#include<cmath>
+#include<climits>
 using namespace std;
 
 
@@ -41,6 +42,7 @@ map<string,bool> qToRemove;
 map<string,bool> strandInfo;
 map<string,vector<int> > newEnd;
 map<string,char> overHangSideQ;
+map<string,vector<int> > nOvlCord;
 };
 
 class fastaSeq{
@@ -50,7 +52,7 @@ map<string,string> seq;
 };
 
 string xtractcol(string str,char c, int n);
-void writeToFile(asmMerge & merge);
+void writeToFile(asmMerge & merge, string & prefix);
 void innieChecker(asmMerge & merge);
 void sideChecker(asmMerge & merge);
 void sideCheckerQ(asmMerge & merge);
@@ -58,14 +60,14 @@ void sideCheckerR(asmMerge & merge);
 void ovlStoreCalculator(asmMerge & merge);
 int ovlCalculator(vector<int>& q_st, vector<int>& q_end);
 void nOvlStoreCalculator(asmMerge & merge);
-void writeSummary(asmMerge & merge);
+void writeSummary(asmMerge & merge, string & prefix);
 string revCom(string & str);
 void ovrHngCal(asmMerge & merge);
 void fillAnchor(asmMerge & merge, asmMerge & merge1, double propAnchor, double propCutoff,const int & length,const int & absLenCutoff, fastaSeq & hyb);
 void fillSeq(fastaSeq & fasta, ifstream& fin, char c);
 void fillSeq(fastaSeq & fasta, ifstream& fin);
 void trimSeq(asmMerge & merge,fastaSeq & hyb);
-void writeAnchorSummary(asmMerge & merge);
+void writeAnchorSummary(asmMerge & merge, string & prefix);
 void findChain(asmMerge & merge, asmMerge & merge1,fastaSeq & pbOnly, fastaSeq & merged,double propCutoff);
 vector<string> vfind(string tempname,vector<string>& temp_rname, vector<string>& temp_qname,asmMerge & merge,string & guruRef,double propCutoff);
 string longestLeft(string tempname, vector<string>& seq,asmMerge & merge, char RorQ, char sideQ, string & prevElem);
@@ -79,7 +81,8 @@ void writeMerged(fastaSeq & merged, ofstream & fout);
 void ctgJoiner(asmMerge & merge,asmMerge & merge1,fastaSeq & hybrid, fastaSeq& pbObly, fastaSeq & merged);
 int maxIntD(int & qf1,int & qe1, int & qf2, int & qe2);
 int mapQonRef(string & tempname1,string & tempname2,asmMerge & merge);
-bool chkOvl(int f1,int e1,int f2,int e2);
+//bool chkOvl(int f1,int e1,int f2,int e2);
+int chkOvl(int f1,int e1,int f2,int e2);
 int max(int & a, int & b);
 int min(int & a, int & b);
 vector<int> minD(int & qf1,int & qe1, int & qf2, int & qe2);
@@ -88,7 +91,11 @@ string reversed(string & str);
 int returnIndex (vector<string> & myvector, string & str);
 void assignStrand(asmMerge & merge);
 void discAnchor(string & guruQ, asmMerge & merge,string & guruRef,double propCutoff);
+int findClosestRev(string & tempname, asmMerge & merge, unsigned int i,char ori);//searches backward
 void lisCalculator(asmMerge & merge,string & tempname,vector<int> &ref_st,vector<int> & ref_end,vector<int> & q_st,vector<int> & q_end);
+int findClosest(string & tempname, asmMerge & merge, unsigned int i,char ori);
 void overHangSideR(asmMerge & merge);
 void splitHaplo(asmMerge & merge,fastaSeq & hybrid);
+void checkAln(asmMerge & merge, asmMerge & merge1);
+vector<string> argParser(char * argv[]);
 #endif

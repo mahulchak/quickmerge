@@ -34,16 +34,16 @@ The package contains all necessary components to run quickmerge. We also provide
 
    On a non-unix system, you will have to manually compile these two programs, like so:
 
-    first, enter the 'merger' directory and enter the following command to make the merger program:
-    ```
+   first, enter the 'merger' directory and enter the following command to make the merger program:
+   ```
  	make
-    ```
-    then, enter the 'MUMmer3.23' directory and enter the following commands, as specified in the MUMmer readme:
-    ```
+   ```
+   then, enter the 'MUMmer3.23' directory and enter the following commands, as specified in the MUMmer readme:
+   ```
 	make check
 
 	make install
-    ```
+   ```
 3. RUNNING QUICKMERGE:
    WRAPPER:
 
@@ -61,11 +61,11 @@ The package contains all necessary components to run quickmerge. We also provide
    ```
    Then, use delta-filter to filter out alignments due to repeats and duplicates:
    ```   
-	delta-filter -i 95 -r -q out.delta > out.rq.delta
+	delta-filter -r -q -l 10000 out.delta > out.rq.delta
    ```
    Finally, use 'quickmerge' to merge the two assemblies (note: the order of the self and hybrid assembly is important:
    ```
-	quickmerge -d out.rq.delta -q hybrid_assembly.fasta -r self_assembly.fasta -hco 5.0 -c 1.5 -l n -ml m
+	quickmerge -d out.rq.delta -q hybrid_assembly.fasta -r self_assembly.fasta -hco 5.0 -c 1.5 -l n -ml m -p prefix
    ```
    Description of the parameters:
    
@@ -82,6 +82,8 @@ The package contains all necessary components to run quickmerge. We also provide
    -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the self assembly. E.g. if the N50 of your self assembly is 2Mb then use 2000000 as your cutoff. Lowering this value may lead to more merging but may increase the probability of mis-joins.
    
    -ml: controls the minimum alignment length to be considered for merging. This is especially helpful for repeat-rich genomes. Default is 0 but higher values (>5000) are recommended.
+   
+   -p: A prefix that is added to the output from the run.
 
 4. SOME HELPFUL TIPS:
 

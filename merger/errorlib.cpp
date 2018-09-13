@@ -4,10 +4,12 @@ void checkAln(asmMerge & merge, asmMerge & merge1)
 {
 	size_t pos;
 	string name,tempname,refName,qName, temp;
-	int rL = 0,rR=0, rs =0, re =0, qL =0, qR =0;
+	int rL = 0,rR=0, rs =0, re =0;
 	int rL1 =0, rL2=0, rR1 =0, rR2=0, qL1=0, qL2=0,qR1 =0, qR2=0;
 	int qs =0,qe =0;
+	int ovlLen = 0;
 	vector<string> vs;
+	double co =0.0;
 	for(map<string,vector<string> >::iterator it=merge1.rseq.begin();it != merge1.rseq.end();it++)
 	{
 		name = it->first;
@@ -34,7 +36,7 @@ void checkAln(asmMerge & merge, asmMerge & merge1)
 //cout<<name<<" "<<refName<<" "<<qName<<"\t"<<rL<<"\t"<<rR<<"\t"<<"merge r seq has "<<merge.rseq[it->first].size()<<" "<<it->first<<endl;
 			if((rL>200) || (rR>200))
 			{
-				//cout<<name<<" "<<refName<<" "<<qName<<"\t"<<rL<<"\t"<<rR<<"\t"<<"merge r seq has "<<merge.rseq[it->first].size()<<" "<<it->first<<endl;
+			//	cout<<name<<" "<<refName<<" "<<qName<<"\t"<<rL<<"\t"<<rR<<"\t"<<"merge r seq has "<<merge.rseq[it->first].size()<<" "<<it->first<<endl;
 				for(unsigned int k=0;k<merge1.q_name.size();k++)
 				{
 					temp = refName + merge1.q_name[k];
@@ -45,11 +47,25 @@ void checkAln(asmMerge & merge, asmMerge & merge1)
 						qs = min(merge.newEnd[temp][2],merge.newEnd[temp][3]);
 						qe = max(merge.newEnd[temp][2],merge.newEnd[temp][3]);
 //cout<<name<<"\t"<<temp<<endl;
-						if((!(re <rL1) && !(re>rL2)) || (!(rs<rR1) && !(rs>rR2)) && (find(vs.begin(),vs.end(),temp) == vs.end()))
-						//if((!(re <rL1) && !(rs>rL2)) || (!(re<rR1) && !(rs>rR2)))
+						if((!(re <rL1) && !(re>rL2)) && (find(vs.begin(),vs.end(),temp) == vs.end()))
 						{
-							cout<<temp<<" "<<merge.newEnd[temp][0]<<" "<<merge.newEnd[temp][1]<<" "<<rL1<<" "<<rL2<<" "<<rR1<<" "<<rR2<<" "<<rL<<" "<<rR<<" "<<merge.innie[temp]<<endl;
-							vs.push_back(temp);
+							ovlLen = min(rL2,re) - max(rL1,rs);
+							co = double(ovlLen)/double(rL);
+							if(co >0.9)
+							{
+//								cout<<"R L "<<temp<<" "<<merge.newEnd[temp][0]<<" "<<merge.newEnd[temp][1]<<" "<<rL1<<" "<<rL2<<" "<<rL<<" "<<ovlLen<<" "<<merge.innie[temp]<<" "<<co<<endl;
+								vs.push_back(temp);
+							}
+						}
+						if((!(rs<rR1) && !(rs>rR2)) && (find(vs.begin(),vs.end(),temp) == vs.end()))
+						{
+							ovlLen = min(rR2,re) - max(rR1,rs);
+							co = double(ovlLen)/double(rR);
+							if(co >0.9)
+							{
+//								cout<<"R R "<<temp<<" "<<merge.newEnd[temp][0]<<" "<<merge.newEnd[temp][1]<<" "<<rR1<<" "<<rR2<<" "<<rR<<" "<<ovlLen<<" "<<merge.innie[temp]<<" "<<co<<endl;
+								vs.push_back(temp);
+							}
 						}
 						
 					}
@@ -64,28 +80,54 @@ void checkAln(asmMerge & merge, asmMerge & merge1)
 //cout<<temp<<endl;
 						qs = min(merge.newEnd[temp][2],merge.newEnd[temp][3]);
 						qe = max(merge.newEnd[temp][2],merge.newEnd[temp][3]);
-						qs = merge.newEnd[temp][2];
-						qe = merge.newEnd[temp][3];
-						if(qL1 <qL2)  //novl is forward and ovl is forward
+					//	qs = merge.newEnd[temp][2];
+					//	qe = merge.newEnd[temp][3];
+						if(qL1 <qL2)  //ovl is forward
 						{
 //cout<<temp<<endl;
-							if(((!(qe <qL1) && !(qe>qL2))|| (!(qs<qR1) && !(qs>qR2))) && (find(vs.begin(),vs.end(),temp) == vs.end()))
-						//	if(((!(qe <qL1) && !(qs>qL2))|| (!(qe<qR1) && !(qs>qR2))) && (find(vs.begin(),vs.end(),temp) == vs.end()))
+							if((!(qe <qL1) && !(qe>qL2)) && (find(vs.begin(),vs.end(),temp) == vs.end()))
 							{
-								cout<<temp<<" "<<merge.newEnd[temp][2]<<" "<<merge.newEnd[temp][3]<<" "<<qL1<<" "<<qL2<<" "<<qR1<<" "<<qR2<<" "<<rL<<" "<<rR<<" "<<merge.innie[temp]<<endl;
-								vs.push_back(temp);
+								ovlLen = min(qL2,qe) - max(qL1,qs);
+								co = double(ovlLen)/double(rL);
+								if(co>0.9)
+								{
+//									cout<<"qF L "<<temp<<" "<<merge.newEnd[temp][2]<<" "<<merge.newEnd[temp][3]<<" "<<qL1<<" "<<qL2<<" "<<rL<<" "<<ovlLen<<" "<< co<<endl;
+									vs.push_back(temp);
+								}
 							}
-						//	if(find(vs.begin(),vs.end(),temp) == vs.end()) //if not found
-						//	{
-						//		vs.push_back(temp);
-						//	}
+							if((!(qs<qR1) && !(qs>qR2)) && (find(vs.begin(),vs.end(),temp) == vs.end()))
+							{
+								ovlLen = min(qe,qR2) - max(qs,qR1);
+								co = double(ovlLen)/double(rR);
+								if(co >0.9)
+								{
+  //                                                              	cout<<"qF R "<<temp<<" "<<merge.newEnd[temp][2]<<" "<<merge.newEnd[temp][3]<<" "<<qR1<<" "<<qR2<<" "<<rR<<" "<<ovlLen<<" "<<co<<endl;
+									vs.push_back(temp);	
+								}
+							}
+								
 						}
 						if(qL1 > qL2) //novl is reverse but ovl is forward
 						{
-							if(((!(qs>qL1) && !(qs<qL2)) || (!(qe>qR1) && !(qe<qR2))) && (find(vs.begin(),vs.end(),temp) == vs.end()))
+							if((!(qs>qL1) && !(qs<qL2)) && (find(vs.begin(),vs.end(),temp) == vs.end()))
 							{
-								cout<<temp<<" "<<merge.newEnd[temp][2]<<" "<<merge.newEnd[temp][3]<<" "<<qL1<<" "<<qL2<<" "<<qR1<<" "<<qR2<<" "<<rL<<" "<<rR<<" "<<merge.innie[temp]<<endl;
-								vs.push_back(temp);
+								ovlLen = min(qe,qL1) - max(qs,qL2);
+								co = double(ovlLen)/double(rL);
+								if(co>0.9)
+								{
+//									cout<<"qR L "<<temp<<" "<<merge.newEnd[temp][2]<<" "<<merge.newEnd[temp][3]<<" "<<qL1<<" "<<qL2<<" "<<rL<<" "<<ovlLen<<" "<<co<<endl;
+									vs.push_back(temp);	
+								}
+							}
+							if((!(qe>qR1) && !(qe<qR2)) && (find(vs.begin(),vs.end(),temp) == vs.end()))
+							{
+								ovlLen = min(qe,qR1) - max(qs,qR2);
+								co = double(ovlLen)/double(rR);
+								if(co >0.9)
+								{
+//									cout<<"qR R "<<temp<<" "<<merge.newEnd[temp][2]<<" "<<merge.newEnd[temp][3]<<" "<<qR1<<" "<<qR2<<" "<<rR<<" "<<ovlLen<<" "<<co<<endl;
+									vs.push_back(temp);
+								}
 							}
 						}
 					}

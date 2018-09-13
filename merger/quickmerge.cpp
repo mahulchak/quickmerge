@@ -18,19 +18,21 @@ int main(int argc, char * argv[])
         if((argc<14) || (argc==1))
         {
 		cerr<<"All options were not supplied :("<<endl;
-		cerr<<"Usage: "<<argv[0]<<" -d delta_file.out -q hybrid.fasta -r self.fasta -hco (default=5.0) -c (default=1.5) -l seed_length_cutoff -ml merging_length_cutoff "<<endl;
+		cerr<<"Usage: "<<argv[0]<<" -d delta_file.out -q hybrid.fasta -r self.fasta -hco (default=5.0) -c (default=1.5) -l seed_length_cutoff -ml merging_length_cutoff -p prefix"<<endl;
        		exit(EXIT_FAILURE);
         }
 
 	ifstream fin,hyb,pb;
 	ofstream fout;
-
-	fout.open("merged.fasta");
-
+	
 	asmMerge merge,merge1; 
 	fastaSeq hybrid,pbOnly,merged;
 
 	string header,ref_name,qu_name,tempname,name;
+	vector<string> vs;
+	vs = argParser(argv);
+	string mergeName = "merged_" + vs[7] + ".fasta";
+	fout.open(mergeName);
 	double hco,cutoff;
 	hco = 5.0;
 	cutoff = 1.5;
@@ -38,18 +40,17 @@ int main(int argc, char * argv[])
 	int qu_end = 0;
 	int r_st = 0;
 	int r_end = 0;
-	const int length = atoi(argv[12]);
-	const int absLenCutoff = atoi(argv[14]);
-	if(*argv[8])
+	const int length = stoi(vs[5],NULL);
+	const int absLenCutoff = stoi(vs[6],NULL);
+	if(vs[3] != "")
 	{
-		hco = strtod(argv[8],NULL);
+		hco = stod(vs[3],NULL);
 	}
-	if(*argv[10])
+	if(vs[4] != "")
 	{
-		cutoff = strtod(argv[10],NULL);	
+		cutoff = stod(vs[4],NULL);
 	}
-
-	fin.open(argv[2]);
+	fin.open(vs[0]);
 
 	while(getline(fin,header))
 	{
@@ -80,7 +81,7 @@ int main(int argc, char * argv[])
 	}
 	fin.close();
 
-	writeToFile(merge);
+	writeToFile(merge,vs[7]);
 	ovlStoreCalculator(merge);
 	innieChecker(merge);
 	sideChecker(merge);
@@ -91,15 +92,15 @@ int main(int argc, char * argv[])
 	nOvlStoreCalculator(merge);
 	ovrHngCal(merge);
 	overHangSideR(merge);
-	writeSummary(merge);
+	writeSummary(merge,vs[7]);
 	
-	if(*argv[4])
+	if(vs[1] != "")
 	{
-		hyb.open(argv[4]);
+		hyb.open(vs[1]);
 	}
-	if(*argv[6])
+	if(vs[2] != "")
 	{
-	pb.open(argv[6]);
+		pb.open(vs[2]);
 	}
 	fillSeq(hybrid,hyb,' ');
 	if(string(argv[16]) == "Y")
@@ -108,13 +109,16 @@ int main(int argc, char * argv[])
 	}
 	fillSeq(pbOnly,pb);
 	fillAnchor(merge,merge1,hco,cutoff,length,absLenCutoff,hybrid);
-	writeAnchorSummary(merge);
+	writeAnchorSummary(merge,vs[7]);
 
 
 	findChain(merge,merge1,pbOnly,merged,cutoff);
 	createMseq(merge,merge1);
+	
+	checkAln(merge,merge1);
 
 	fillOri(merge,merge1);	
+	
 	for(map<string,vector<string> >::iterator it=merge1.lseq.begin();it != merge1.lseq.end();it++)
 	{
 		name = it->first;
@@ -125,7 +129,7 @@ int main(int argc, char * argv[])
 		}
 		cout<<endl;
 	}
-
+	//checkAln(merge,merge1);
 	removeSeq(merge,hybrid,merged); // copy unaligned hybrid contigs to merged 
 	//trimSeq(merge,hybrid);
 	ctgJoiner(merge,merge1,hybrid,pbOnly,merged);
