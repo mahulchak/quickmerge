@@ -59,7 +59,7 @@ The package contains all necessary components to run quickmerge. We also provide
    ```
 	nucmer -l 100 -prefix out  self_assembly.fasta hybrid_assembly.fasta
    ```
-   Then, use delta-filter to filter out alignments due to repeats and duplicates:
+   Then, use delta-filter to filter out alignments due to repeats and duplicates. Use any length for filtering out alignments between non-syntenic repeats, but higher is better (here we show 10kb) :
    ```   
 	delta-filter -r -q -l 10000 out.delta > out.rq.delta
    ```
