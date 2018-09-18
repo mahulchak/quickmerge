@@ -63,7 +63,7 @@ The package contains all necessary components to run quickmerge. We also provide
    ```   
 	delta-filter -r -q -l 10000 out.delta > out.rq.delta
    ```
-   Finally, use 'quickmerge' to merge the two assemblies (note: the order of the self and hybrid assembly is important:
+   Finally, use 'quickmerge' to merge the two assemblies:
    ```
 	quickmerge -d out.rq.delta -q hybrid_assembly.fasta -r self_assembly.fasta -hco 5.0 -c 1.5 -l n -ml m -p prefix
    ```
