@@ -81,7 +81,7 @@ The package contains all necessary components to run quickmerge. We also provide
 
    -l: controls the length cutoff for anchor contigs. A good rule of thumb is to start with the N50 of the self assembly. E.g. if the N50 of your self assembly is 2Mb then use 2000000 as your cutoff. Lowering this value may lead to more merging but may increase the probability of mis-joins.
    
-   -ml: controls the minimum alignment length to be considered for merging. This is especially helpful for repeat-rich genomes. Default is 0 but higher values (>5000) are recommended.
+   -ml: controls the minimum alignment length to be considered for merging. This is especially helpful for repeat-rich genomes. Default is 5000 but higher values (>5000) are recommended.
    
    -p: A prefix that is added to the output from the run.
 

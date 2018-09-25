@@ -17,7 +17,7 @@ parser.add_argument("--no_nucmer", help="skip the nucmer step",action="store_tru
 parser.add_argument("--no_delta", help="skip the nucmer and delta-filter steps",action="store_true")
 parser.add_argument("--stop_after_nucmer", help="do not perform the delta-filter and merger steps",action="store_true")
 parser.add_argument("--stop_after_df", help="do not perform the merger step",action="store_true")
-parser.add_argument("-lm", "--length_minimum", help="set the minimum alignment length necessary for use in quickmerge (default 0)")
+parser.add_argument("-ml", "--merging_length_cutoff", help="set the merging length cutoff necessary for use in quickmerge (default 5000)")
 parser.add_argument("--clean_only", help="generate safe FASTA files for merging, but do not merge",action="store_true")
 
 args=parser.parse_args()
@@ -39,10 +39,10 @@ if args.length_cutoff:
     length_cutoff = args.length_cutoff
 else:
     length_cutoff = 0
-if args.length_minimum:
-    length_minimum = args.length_minimum
+if args.merging_length_cutoff:
+    merging_length_cutoff = args.merging_length_cutoff
 else:
-    length_minimum = 0
+    merging_length_cutoff = 5000
 
 
 ##define functions:
@@ -165,9 +165,9 @@ mergercall.append(str(c))
 #if args.length_cutoff:
 mergercall.append('-l')
 mergercall.append(str(length_cutoff))
-#if args.length_minimum:
-mergercall.append('-lm')
-mergercall.append(str(length_minimum))
+#if args.merging_length_cutoff:
+mergercall.append('-ml')
+mergercall.append(str(merging_length_cutoff))
 
 #run the merging program
 if not args.stop_after_nucmer and not args.stop_after_df and not args.clean_only:
