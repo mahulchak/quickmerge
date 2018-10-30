@@ -168,6 +168,8 @@ mergercall.append(str(length_cutoff))
 #if args.merging_length_cutoff:
 mergercall.append('-ml')
 mergercall.append(str(merging_length_cutoff))
+mergercall.append('-p')
+mergercall.append(str(prefix))
 
 #run the merging program
 if not args.stop_after_nucmer and not args.stop_after_df and not args.clean_only:
