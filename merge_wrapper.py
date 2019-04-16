@@ -101,9 +101,16 @@ for iteration in range(0,2):
         ok = True
         for linea in tfile:
             line = linea.rstrip('\n')
-            if i % 2 == 0 and line[0] != ">": ok = False
+            try:
+                if i % 2 == 0 and line[0] != ">": ok = False
+            except IndexError:
+                ok = False
             if " " in line: ok = False
-            if line[0] != ">" and not line.isupper(): ok = False
+            try:
+                if line[0] != ">" and not line.isupper(): ok = False
+            except IndexError:
+                ok = False
+            if len(line) <= 0: ok = False
             i += 1
 
 
@@ -118,7 +125,9 @@ for iteration in range(0,2):
                 for linea in tfile:
                     line = linea.rstrip('\n')
                     #print line # debug line
-                    if line[0] == ">":
+                    if len(line) <= 0:
+                        pass
+                    elif line[0] == ">":
                         #print line # debug line
                         if len(header) > 0 and len(seq) > 0:
                             if not ok1 or not ok2:
