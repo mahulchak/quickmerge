@@ -2,7 +2,6 @@
 //The program does not correct any assembly errors. It only joins contigs. So if a contig was misassembled  by the main assembly program,
 //it will most likely remain misassembled. Currently, the program is intended to use when 30X or above pacbio data is available, such that at least a 
 //respectable self-assembly is available. 
-//Copyright (C) 2015  Mahul Chakraborty 
 //Please send questions and bug reports to mchakrab@uci.edu
 
 #include<iostream>
@@ -15,13 +14,29 @@ using namespace std;
 
 int main(int argc, char * argv[])
 {
-        if((argc<14) || (argc==1))
+        if((argc<14) ||(string(argv[1])=="-h")||(string(argv[1])=="--help"))
         {
-		cerr<<"All options were not supplied :("<<endl;
-		cerr<<"Usage: "<<argv[0]<<" -d delta_file.out -q hybrid.fasta -r self.fasta -hco (default=5.0) -c (default=1.5) -l seed_length_cutoff -ml merging_length_cutoff -p prefix"<<endl;
+		cout<<endl;
+		cerr<<"Usage: "<<argv[0]<<" -d out.delta -q query.fasta -r reference.fasta -hco (default=5.0) -c (default=1.5) -l seed_length_cutoff -ml merging_length_cutoff -p prefix"<<endl;
+		cout<<"========================================================="<<endl;
+		cout<<"quickmerge version 0.3"<<endl;
+		cout<<"   Options:\n";
+		cout<<"       -d : delta alignment file from nucmer\n";
+		cout<<"       -q : fasta used as query in nucmer\n";
+		cout<<"       -r : fasta used as reference in nucmer\n";
+		cout<<"     -hco : seed alignment HCO cutoff (default=5.0)\n";
+		cout<<"       -c : high confidence overlap cutoff (default=1.5)\n";
+		cout<<"       -l : seed alignment length cutoff (long integer)\n";
+		cout<<"      -ml : merging length cutoff (integer)\n";
+		cout<<"       -p : output prefix\n";
+		cout<<"-h/--help : prints this help\n";	
        		exit(EXIT_FAILURE);
         }
-
+	if(string(argv[1]) == "-v")
+	{
+		cout<<"quickmerge version 0.3"<<endl;
+		exit(EXIT_FAILURE);
+	}
 	ifstream fin,hyb,pb;
 	ofstream fout;
 	
