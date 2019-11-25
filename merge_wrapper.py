@@ -18,6 +18,8 @@ parser.add_argument("--no_delta", help="skip the nucmer and delta-filter steps",
 parser.add_argument("--stop_after_nucmer", help="do not perform the delta-filter and merger steps",action="store_true")
 parser.add_argument("--stop_after_df", help="do not perform the merger step",action="store_true")
 parser.add_argument("-ml", "--merging_length_cutoff", help="set the merging length cutoff necessary for use in quickmerge (default 5000)")
+parser.add_argument("-t", "--threads", help="Number of threads to use for MUMmer alignment (note: this option only works with MUMmer 4+, not the default MUMmer 3.23; default 1).")
+parser.add_argument("-v", "--version4", help="Switch on this flag if you're using version 4+ of MUMmer, rather than the default version of 3.23.", action = "store_true")
 parser.add_argument("--clean_only", help="generate safe FASTA files for merging, but do not merge",action="store_true")
 
 args=parser.parse_args()
@@ -44,6 +46,19 @@ if args.merging_length_cutoff:
 else:
     merging_length_cutoff = 5000
 
+if args.version4:
+    v4 = True
+else:
+    v4 = False
+
+if args.threads:
+    if not v4:
+        exit("Versions of MUMmer before 4 are not compatible with multithreading.")
+    threads = int(args.threads)
+    multithread = True
+else:
+    threads = 1
+    multithread = False
 
 ##define functions:
 def test_for_namedups(connection1,connection2):
@@ -156,7 +171,14 @@ for iteration in range(0,2):
 
 #run nucmer:
 if not args.no_nucmer and not args.no_delta and not args.clean_only:
-    subprocess.call(['nucmer','-l','100','-prefix',str(prefix),str(selfpath),str(hypath)])
+    if v4:
+        if multithread:
+            subprocess.call(['nucmer', '-t', str(threads),'-l','100','--prefix='+str(prefix),str(selfpath),str(hypath)])
+        else:
+            subprocess.call(['nucmer','-l','100','--prefix=' + str(prefix),str(selfpath),str(hypath)])
+    else:
+        subprocess.call(['nucmer', '-l','100','-prefix', str(prefix),str(selfpath),str(hypath)])
+        
 
 #run the delta filter on the nucmer alignment:
 if not args.no_delta and not args.stop_after_nucmer and not args.clean_only:
