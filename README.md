@@ -47,11 +47,15 @@ The package contains all necessary components to run quickmerge. We also provide
 3. RUNNING QUICKMERGE:
    WRAPPER:
 
-   The simplest way to run 'merger' is to use the python wrapper 'merge_wrapper_v2.py':
+   The simplest way to run 'merger' is to use the python wrapper 'merge_wrapper.py':
    ```
 	merge_wrapper.py hybrid_assembly.fasta self_assembly.fasta
    ```
-   try the command 'merge_wrapper_v2.py -h' for detail on options available with this wrapper.
+   try the command 'merge_wrapper.py -h' for detail on options available with this wrapper.
+
+   Note that, if you use the wrapper with MUMmer version 4, the `-v` flag is
+   required. Multithreading of MUMmer is available using the `-t` tag if using
+   MUMmer v4 or above.
 
    MANUAL:
 
