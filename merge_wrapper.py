@@ -12,7 +12,7 @@ parser.add_argument("self_assembly_fasta",help="the output of a self assembly pr
 parser.add_argument("-pre","--prefix", help="the prefix for all output files")
 parser.add_argument("-hco","--hco", help="the quickmerge hco parameter (default=5.0)")
 parser.add_argument("-c","--c", help="the quickmerge c parameter (default=1.5)")
-parser.add_argument("-l","--length_cutoff", help="minimum seed contig length to be merged (default=0)")
+parser.add_argument("-l","--length_cutoff", help="minimum seed contig length to be merged (default=0)", required=True)
 parser.add_argument("--no_nucmer", help="skip the nucmer step",action="store_true")
 parser.add_argument("--no_delta", help="skip the nucmer and delta-filter steps",action="store_true")
 parser.add_argument("--stop_after_nucmer", help="do not perform the delta-filter and merger steps",action="store_true")
