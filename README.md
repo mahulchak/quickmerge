@@ -23,6 +23,19 @@ The package contains all necessary components to run quickmerge. We also provide
    
 2. INSTALL:
 
+CONDA
+
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/quickmerge/badges/latest_release_date.svg)](https://anaconda.org/bioconda/quickmerge)
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/quickmerge/badges/platforms.svg)](https://anaconda.org/bioconda/quickmerge)
+[![Anaconda-Server Badge](https://anaconda.org/bioconda/quickmerge/badges/downloads.svg)](https://anaconda.org/bioconda/quickmerge)
+
+To install quickmerge, first install [conda](https://conda.io/en/latest/miniconda.html) then run:
+
+```
+conda install -c conda-forge -c bioconda quickmerge
+```
+
+
    UNIX:
    To install on a unix-based system, enter the following into the command line from the directory that this readme originated from:
    ```
