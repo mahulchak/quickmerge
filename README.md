@@ -3,7 +3,7 @@
 
 What is quickmerge?
 
-quickmerge uses a simple concept to improve contiguity of genome assemblies based on long molecule sequences, often with dramatic outcomes. The program uses information from assemblies made with Illumina short reads and Pacific Biosciences or Oxford Nanopore long reads to improve contiguities of an assembly generated with long reads alone. This is counterintuitive because Illumina short reads are not typically considered to cover genomic regions which PacBio and ONP long reads cannot. For more details, please see <a href="http://nar.oxfordjournals.org/content/early/2016/07/25/nar.gkw654.full">the paper</a> that describes it. Citation for ONP assembly merging is <a href="https://www.g3journal.org/content/8/10/3143.abstract">here</a>     
+The program uses complementary information from genomes assembled with long reads, including Pacific Biosciences or Oxford Nanopore. Quickmerge will even work with hybrid assemblies made by combining  long reads and Illumina short reads. This can be useful when long read coverage is limiting. For more details, please see <a href="http://nar.oxfordjournals.org/content/early/2016/07/25/nar.gkw654.full">the paper</a> that describes it. Citation for ONP assembly merging is <a href="https://www.g3journal.org/content/8/10/3143.abstract">here</a>     
 
 Why use quickmerge?
 
