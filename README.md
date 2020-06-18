@@ -11,7 +11,7 @@ Why use quickmerge?
  * It is fast. Takes less than a minute to run on most genomes. You run nucmer once (nucmer is the most time consuming step) and then you can run quickmerge over a large number of parameters in a very short time.
  * Requires only fasta files and does not depend on any special data or computational resources.
  * Saves money. When long read coverage is limiting, there are some hybrid approaches that lead to good results (e.g. DBG2OLC). So quickmerge allows you to cut your long molecule requirement by as much as half by replacing the same with Illumina short reads. E.g. if you think you would get a N50 of 8Mb from 75X long reads (ONP or PacBio), try sequencing 45X long and 70X Illumina reads instead of 75X long reads. You may not need that extra 35X long reads.
- Allows dramatic improvements with reanalysis of legacy data collected when long reads were prohibitively expensive. See an excellent example from <a href="https://www.g3journal.org/content/10/3/899">this paper by Thomas Mather on the Soybean Aphid genome</a>.
+ * Allows dramatic improvements with reanalysis of legacy data collected when long reads were prohibitively expensive. See an excellent example from <a href="https://www.g3journal.org/content/10/3/899">this paper by Thomas Mather on the Soybean Aphid genome</a>.
  
 The package contains all necessary components to run quickmerge. We also provide a set of test data (currrently available on request) so that you can check that the program is working correctly in your computer. Please send questions and comments to mchakrab@uci.edu
 
