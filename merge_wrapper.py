@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import subprocess
 import sys
 import argparse
@@ -133,7 +133,7 @@ for iteration in range(0,2):
         #if fasta isn't compatible, make oneline version of fasta:
         if not ok:
             tfile.seek(0)
-            tempoutpath = order[iteration] + "_oneline.fa"
+            tempoutpath = prefix + "_" + order[iteration] + "_oneline.fa"
             with open(tempoutpath,"w") as tout:
                 header = ""
                 seq = ""
